@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="headlogo.png" type="image/png">
+  <title>Create Space - UniSpace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --ink: #6366f1;
+      --ink-2: #4f46e5;
+      --ink-3: #818cf8;
+      --muted: #64748b;
+      --muted-light: #94a3b8;
+      --rule: #e2e8f0;
+      --surface: #f8fafc;
+      --white: #ffffff;
+      --accent: #6366f1;
+      --accent-alt: #6366f1;
+      --success: #10b981;
+      --error: #ef4444;
+      --warning: #f59e0b;
+      --dark: #1e293b;
+    }
+
+    *, *::before, *::after {
+      margin: 0; padding: 0; box-sizing: border-box;
+    }
+
+    html, body { height: 100%; }
+
+    body {
+      background: radial-gradient(ellipse at center, #ffffff 0%, #f3f5ff 50%, #eef1ff 100%);
+      color: var(--dark);
+      font-family: 'Space Grotesk', sans-serif;
+      display: flex;
+      align-items: stretch;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Layout ─────────────────────────────────────── */
+    .shell {
+      display: flex;
+      width: 100%;
+      min-height: 100vh;
+    }
+
+    .aside {
+      width: 38%;
+      background: #4f46e5;
+      background: linear-gradient(145deg, #4f46e5 0%, #6366f1 60%, #818cf8 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 3rem 3rem 2.5rem;
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .aside-noise {
+      position: absolute; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+
+    .aside-grid {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+    }
+
+    .aside-top {
+      position: relative; z-index: 1;
+    }
+
+    .wordmark {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 3.5rem;
+    }
+
+    .wordmark-dot {
+      width: 8px; height: 8px;
+      background: rgba(255,255,255,0.7);
+      border-radius: 50%;
+    }
+
+    .wordmark-text {
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--white);
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    .aside-headline {
+      font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    .aside-headline em {
+      font-style: normal;
+      color: rgba(255,255,255,0.6);
+    }
+
+    .aside-sub {
+      margin-top: 1.25rem;
+      font-size: 0.925rem;
+      color: rgba(255,255,255,0.9);
+      font-weight: 500;
+      line-height: 1.75;
+      font-family: 'Space Grotesk', sans-serif;
+      letter-spacing: 0.01em;
+    }
+
+    .aside-features {
+      margin-top: 2.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.875rem;
+    }
+
+    .feature-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.55rem 0.875rem;
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.95);
+      width: fit-content;
+      font-family: 'Space Grotesk', sans-serif;
+      letter-spacing: 0.02em;
+      transition: border-color 0.2s, background 0.2s;
+      background: rgba(255,255,255,0.08);
+    }
+
+    .feature-pill:hover {
+      border-color: rgba(255,255,255,0.6);
+      background: rgba(255,255,255,0.15);
+      color: var(--white);
+    }
+
+    .feature-pill-dot {
+      width: 5px; height: 5px;
+      background: rgba(255,255,255,0.7);
+      border-radius: 50%;
+    }
+
+    .aside-bottom {
+      position: relative; z-index: 1;
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.5);
+      font-family: 'Space Grotesk', sans-serif;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── Main Form Panel ────────────────────────────── */
+    .main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 2rem;
+      background: transparent;
+      position: relative;
+    }
+
+    .form-panel {
+      width: 100%;
+      max-width: 420px;
+    }
+
+    /* ── Step Tracker ───────────────────────────────── */
+    .step-track {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin-bottom: 2.75rem;
+    }
+
+    .step-node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .step-circle {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.72rem;
+      font-weight: 700;
+      font-family: 'Space Grotesk', sans-serif;
+      border: 1.5px solid var(--rule);
+      background: var(--white);
+      color: var(--muted);
+      transition: all 0.3s ease;
+      letter-spacing: 0;
+    }
+
+    .step-circle.active {
+      border-color: #6366f1;
+      background: #6366f1;
+      color: var(--white);
+    }
+
+    .step-circle.done {
+      border-color: #10b981;
+      background: #10b981;
+      color: var(--white);
+    }
+
+    .step-circle.done i { font-size: 0.65rem; }
+
+    .step-name {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted-light);
+      transition: color 0.3s;
+      white-space: nowrap;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    .step-name.active { color: #6366f1; font-family: 'Space Grotesk', sans-serif; }
+
+    .step-bridge {
+      flex: 1;
+      height: 1px;
+      background: var(--rule);
+      margin: 0 6px;
+      margin-bottom: 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .step-bridge-fill {
+      position: absolute;
+      inset: 0;
+      background: #10b981;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s cubic-bezier(0.65, 0, 0.35, 1);
+    }
+
+    .step-bridge-fill.filled { transform: scaleX(1); }
+
+    /* ── Header ─────────────────────────────────────── */
+    .form-header {
+      margin-bottom: 2rem;
+    }
+
+    .form-eyebrow {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #6366f1;
+      font-family: 'Space Grotesk', sans-serif;
+      margin-bottom: 0.5rem;
+    }
+
+    .form-title {
+      font-size: 1.65rem;
+      font-weight: 700;
+      color: #1e293b;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    /* ── Steps ──────────────────────────────────────── */
+    .step { display: none; }
+    .step.active {
+      display: block;
+      animation: stepIn 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes stepIn {
+      from { opacity: 0; transform: translateX(12px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    /* ── Form Fields ────────────────────────────────── */
+    .field {
+      margin-bottom: 1.5rem;
+    }
+
+    .field-label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #1e293b;
+      margin-bottom: 0.6rem;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    .field-input {
+      width: 100%;
+      padding: 0.875rem 1rem;
+      background: var(--surface);
+      border: 1.5px solid var(--rule);
+      border-radius: 8px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: #1e293b;
+      transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    .field-input::placeholder { color: var(--muted-light); font-weight: 400; }
+
+    .field-input:focus {
+      outline: none;
+      border-color: #6366f1;
+      background: var(--white);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    }
+
+    .field-input.err {
+      border-color: #ef4444;
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.08);
+    }
+
+    .field-hint {
+      margin-top: 0.4rem;
+      font-size: 0.73rem;
+      color: var(--muted);
+      font-family: 'Space Grotesk', sans-serif;
+      letter-spacing: 0.01em;
+    }
+
+    /* ── Security Note ──────────────────────────────── */
+    .sec-note {
+      display: flex;
+      gap: 0.75rem;
+      align-items: flex-start;
+      padding: 0.875rem 1rem;
+      background: #f0f9ff;
+      border: 1px solid #bae6fd;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+    }
+
+    .sec-note i {
+      font-size: 0.8rem;
+      color: #0284c7;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    .sec-note-text {
+      font-size: 0.78rem;
+      color: #0c4a6e;
+      line-height: 1.55;
+      font-family: 'Space Grotesk', sans-serif;
+      letter-spacing: 0.01em;
+    }
+
+    /* ── Buttons ────────────────────────────────────── */
+    .btn-row {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 2rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.875rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 0.875rem;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: #6366f1;
+      color: var(--white);
+      flex: 1;
+      box-shadow: 0 2px 8px rgba(99, 102, 241, 0.25);
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: #4f46e5;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(99, 102, 241, 0.35);
+    }
+
+    .btn-primary:active:not(:disabled) { transform: translateY(0); }
+
+    .btn-primary:disabled {
+      opacity: 0.5; cursor: not-allowed;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted);
+      border: 1.5px solid var(--rule);
+      padding: 0.875rem 1.125rem;
+      flex-shrink: 0;
+    }
+
+    .btn-ghost:hover {
+      border-color: #6366f1;
+      color: #6366f1;
+    }
+
+    /* Loader */
+    .spin {
+      width: 14px; height: 14px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.55s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Sign In Divider ────────────────────────────── */
+    .signin-row {
+      margin-top: 2rem;
+      padding-top: 1.75rem;
+      border-top: 1px solid var(--rule);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .signin-label {
+      font-size: 0.82rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .signin-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #6366f1;
+      text-decoration: none;
+      letter-spacing: 0.02em;
+      transition: opacity 0.15s;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    .signin-link:hover { opacity: 0.6; }
+
+    /* ── Toast ──────────────────────────────────────── */
+    .toast {
+      position: fixed;
+      bottom: 28px; right: 28px;
+      display: flex; align-items: center; gap: 0.75rem;
+      padding: 0.875rem 1.25rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      font-family: 'Space Grotesk', sans-serif;
+      max-width: 360px;
+      z-index: 10000;
+      transform: translateY(16px) scale(0.97);
+      opacity: 0;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      pointer-events: none;
+    }
+
+    .toast.show { transform: translateY(0) scale(1); opacity: 1; pointer-events: all; }
+    .toast.success { background: #10b981; color: var(--white); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4); }
+    .toast.error   { background: #ef4444; color: var(--white); box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4); }
+    .toast.warning { background: #f59e0b; color: var(--white); box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4); }
+    .toast.info    { background: #3b82f6; color: var(--white); box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4); }
+    .toast i { font-size: 0.9rem; flex-shrink: 0; }
+
+    /* ── Disabled Modal ─────────────────────────────── */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(6px);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 10000;
+      animation: fadeIn 0.2s ease;
+    }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    .modal-card {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 2.5rem;
+      max-width: 380px;
+      width: 90%;
+      text-align: center;
+      animation: popUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes popUp {
+      from { opacity: 0; transform: translateY(20px) scale(0.95); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .modal-icon {
+      width: 52px; height: 52px;
+      background: #fef2f2;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1.25rem;
+    }
+
+    .modal-icon i { font-size: 1.25rem; color: var(--error); }
+
+    .modal-card h2 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 0.6rem;
+      letter-spacing: -0.02em;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    .modal-card p {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.65;
+      margin-bottom: 1.75rem;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    /* ── Responsive ─────────────────────────────────── */
+    @media (max-width: 900px) {
+      .aside { width: 34%; }
+      .aside-headline { font-size: 1.5rem; }
+      .aside-features { margin-top: 1.75rem; gap: 0.7rem; }
+    }
+
+    @media (max-width: 820px) {
+      .aside { display: none; }
+      .shell { flex-direction: column; }
+      .main {
+        padding: 2.5rem 1.75rem;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+      }
+      .form-panel { max-width: 480px; }
+    }
+
+    @media (max-width: 600px) {
+      .main { padding: 2rem 1.5rem; }
+      .form-panel { max-width: 100%; }
+      .form-title { font-size: 1.4rem; }
+      .step-track { margin-bottom: 2rem; }
+      .step-circle { width: 28px; height: 28px; font-size: 0.65rem; }
+      .step-name { font-size: 0.6rem; }
+    }
+
+    @media (max-width: 420px) {
+      .main { padding: 1.5rem 1rem; }
+      .mobile-bar { padding: 0.875rem 1rem; }
+      .form-title { font-size: 1.25rem; }
+      .form-header { margin-bottom: 1.5rem; }
+      .field { margin-bottom: 1.1rem; }
+      .field-input { padding: 0.75rem 0.875rem; font-size: 0.9rem; }
+      .btn { padding: 0.8rem 1.25rem; font-size: 0.85rem; }
+      .btn-row { margin-top: 1.5rem; gap: 0.5rem; }
+      .step-track { margin-bottom: 1.75rem; }
+      .step-bridge { margin: 0 4px; margin-bottom: 1.5rem; }
+      .signin-row { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+      .toast { left: 12px; right: 12px; bottom: 12px; max-width: none; font-size: 0.8rem; }
+    }
+
+    @media (max-width: 340px) {
+      .step-name { display: none; }
+      .step-circle { width: 26px; height: 26px; }
+      .main { padding: 1.25rem 0.875rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="shell">
+
+  <!-- ── Left Aside ── -->
+  <aside class="aside">
+    <div class="aside-noise"></div>
+    <div class="aside-grid"></div>
+
+    <div class="aside-top">
+      <div class="wordmark">
+        <div class="wordmark-dot"></div>
+        <span class="wordmark-text">UniSpace</span>
+      </div>
+
+      <h1 class="aside-headline">
+        Your files.<br>
+        Your rules.<br>
+        <em>Your space.</em>
+      </h1>
+
+      <p class="aside-sub">
+        A personal workspace that stays<br>
+        secure, organized, and always yours.
+      </p>
+
+      <div class="aside-features">
+        <div class="feature-pill"><div class="feature-pill-dot"></div> End-to-end encrypted storage</div>
+        <div class="feature-pill"><div class="feature-pill-dot"></div> Instant file access anywhere</div>
+        <div class="feature-pill"><div class="feature-pill-dot"></div> Private by default</div>
+      </div>
+    </div>
+
+    <div class="aside-bottom">© 2025 UniSpace — All rights reserved</div>
+  </aside>
+
+  <!-- ── Main Form ── -->
+  <main class="main">
+    <div class="form-panel" id="registration-container">
+
+      <!-- Step Track -->
+      <div class="step-track">
+        <div class="step-node">
+          <div class="step-circle active" id="step-1"><i class="fas fa-check"></i></div>
+          <span class="step-name active">Personal</span>
+        </div>
+        <div class="step-bridge"><div class="step-bridge-fill" id="bridge-1"></div></div>
+        <div class="step-node">
+          <div class="step-circle" id="step-2"><i class="fas fa-check"></i></div>
+          <span class="step-name">Contact</span>
+        </div>
+        <div class="step-bridge"><div class="step-bridge-fill" id="bridge-2"></div></div>
+        <div class="step-node">
+          <div class="step-circle" id="step-3"><i class="fas fa-check"></i></div>
+          <span class="step-name">Work</span>
+        </div>
+        <div class="step-bridge"><div class="step-bridge-fill" id="bridge-3"></div></div>
+        <div class="step-node">
+          <div class="step-circle" id="step-4"><i class="fas fa-check"></i></div>
+          <span class="step-name">Security</span>
+        </div>
+      </div>
+
+      <!-- Header -->
+      <div class="form-header">
+        <div class="form-eyebrow" id="step-eyebrow">Step 1 of 4</div>
+        <h2 class="form-title" id="step-title">Personal Information</h2>
+      </div>
+
+      <!-- Form -->
+      <form id="registration-form">
+
+        <!-- Step 1 -->
+        <div class="step active" id="step-content-1">
+          <div class="field">
+            <label for="name" class="field-label">Full Name</label>
+            <input type="text" name="name" id="name" class="field-input" placeholder="Enter your full name" required>
+            <span class="field-hint">Displayed on your profile</span>
+          </div>
+          <div class="btn-row">
+            <button type="button" class="btn btn-primary" onclick="nextStep()">
+              Continue <i class="fas fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="step" id="step-content-2">
+          <div class="field">
+            <label for="email" class="field-label">Email Address</label>
+            <input type="email" name="email" id="email" class="field-input" placeholder="your@email.com" required>
+            <span class="field-hint">Used for login, alerts and account recovery</span>
+          </div>
+          <div class="btn-row">
+            <button type="button" class="btn btn-ghost" onclick="prevStep()">
+              <i class="fas fa-arrow-left"></i>
+            </button>
+            <button type="button" class="btn btn-primary" onclick="nextStep()">
+              Continue <i class="fas fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="step" id="step-content-3">
+          <div class="field">
+            <label for="profession" class="field-label">Profession</label>
+            <input type="text" name="profession" id="profession" class="field-input" placeholder="e.g., Developer, Designer, Manager">
+            <span class="field-hint">Helps us understand your role and expertise</span>
+          </div>
+          <div class="btn-row">
+            <button type="button" class="btn btn-ghost" onclick="prevStep()">
+              <i class="fas fa-arrow-left"></i>
+            </button>
+            <button type="button" class="btn btn-primary" onclick="nextStep()">
+              Continue <i class="fas fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="step" id="step-content-4">
+          <div class="sec-note">
+            <i class="fas fa-lock"></i>
+            <span class="sec-note-text">We never store your files unencrypted.</span>
+          </div>
+          <div class="field">
+            <label for="password" class="field-label">Password</label>
+            <input type="password" name="pass" id="password" class="field-input" placeholder="Create a secure password" required>
+            <span class="field-hint">Minimum 6 characters required</span>
+          </div>
+          <div class="btn-row">
+            <button type="button" class="btn btn-ghost" onclick="prevStep()">
+              <i class="fas fa-arrow-left"></i>
+            </button>
+            <button type="submit" class="btn btn-primary" id="submit-btn">
+              Create Space <i class="fas fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+
+      </form>
+
+      <!-- Sign In -->
+      <div class="signin-row">
+        <span class="signin-label">Already have a space?</span>
+        <a href="/" class="signin-link">Sign In <i class="fas fa-arrow-right"></i></a>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script>
+  let currentStep = 1;
+  const totalSteps = 4;
+  const formData = {};
+
+  const stepInfo = {
+    1: { eyebrow: "Step 1 of 4", title: "Personal Information" },
+    2: { eyebrow: "Step 2 of 4", title: "Contact Details" },
+    3: { eyebrow: "Step 3 of 4", title: "Professional Info" },
+    4: { eyebrow: "Step 4 of 4", title: "Space Security" }
+  };
+
+  // ── Registration status ─────────────────────────────
+  async function checkRegistrationStatus() {
+    try {
+      const res = await fetch('/api/registration-status');
+      const data = await res.json();
+      if (!data.enabled) { showRegistrationDisabledModal(); return false; }
+      return true;
+    } catch { return true; }
+  }
+
+  function showRegistrationDisabledModal() {
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    overlay.innerHTML = `
+      <div class="modal-card">
+        <div class="modal-icon"><i class="fas fa-user-slash"></i></div>
+        <h2>Registrations Paused</h2>
+        <p>The administrator has temporarily disabled new user registrations. Please check back later or contact support for assistance.</p>
+        <button id="return-home-btn" class="btn btn-primary" style="width:100%">
+          <i class="fas fa-arrow-left"></i> Return Home
+        </button>
+      </div>`;
+    document.body.appendChild(overlay);
+    document.querySelectorAll('#registration-form input, #registration-form button')
+      .forEach(el => el.disabled = true);
+    document.getElementById('return-home-btn').addEventListener('click', () => {
+      window.location.href = '/';
+    });
+  }
+
+  // ── Toast ───────────────────────────────────────────
+  function showToast(message, type = 'success', duration = 3000) {
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', warning: 'fa-exclamation-triangle', info: 'fa-info-circle' };
+    toast.innerHTML = `<i class="fas ${icons[type] || icons.success}"></i><span>${message}</span>`;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.classList.add('show'), 10);
+    setTimeout(() => {
+      toast.classList.remove('show');
+      setTimeout(() => toast.remove(), 300);
+    }, duration);
+  }
+
+  // ── Step navigation ─────────────────────────────────
+  function nextStep() {
+    if (!validateCurrentStep()) return;
+    saveCurrentStepData();
+    if (currentStep < totalSteps) {
+      setStepState(currentStep, 'done');
+      currentStep++;
+      setStepState(currentStep, 'active');
+      updateContent();
+      setTimeout(() => {
+        const inp = document.querySelector(`#step-content-${currentStep} .field-input`);
+        if (inp) inp.focus();
+      }, 80);
+    }
+  }
+
+  function prevStep() {
+    if (currentStep <= 1) return;
+    setStepState(currentStep, '');
+    currentStep--;
+    setStepState(currentStep, 'active');
+    updateContent();
+  }
+
+  function setStepState(step, state) {
+    const circle = document.getElementById(`step-${step}`);
+    const label = document.querySelectorAll('.step-name')[step - 1];
+    circle.className = 'step-circle';
+    label.className = 'step-name';
+    if (state === 'active') { circle.classList.add('active'); label.classList.add('active'); }
+    if (state === 'done')   { circle.classList.add('done'); }
+    // bridges
+    if (step < totalSteps) {
+      const bridge = document.getElementById(`bridge-${step}`);
+      if (bridge) bridge.classList.toggle('filled', state === 'done');
+    }
+  }
+
+  function updateContent() {
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+    document.getElementById(`step-content-${currentStep}`).classList.add('active');
+    document.getElementById('step-eyebrow').textContent = stepInfo[currentStep].eyebrow;
+    document.getElementById('step-title').textContent   = stepInfo[currentStep].title;
+  }
+
+  // ── Validation ──────────────────────────────────────
+  function validateCurrentStep() {
+    const el = document.getElementById(`step-content-${currentStep}`);
+    for (const input of el.querySelectorAll('input[required]')) {
+      if (!input.value.trim()) {
+        input.focus();
+        input.classList.add('err');
+        showToast('Please fill in all required fields', 'error');
+        setTimeout(() => input.classList.remove('err'), 2000);
+        return false;
+      }
+    }
+    if (currentStep === 2) {
+      const email = document.getElementById('email').value;
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        showToast('Please enter a valid email address', 'error');
+        document.getElementById('email').focus();
+        return false;
+      }
+    }
+    if (currentStep === 4) {
+      if (document.getElementById('password').value.length < 6) {
+        showToast('Password must be at least 6 characters', 'warning');
+        document.getElementById('password').focus();
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function saveCurrentStepData() {
+    document.querySelectorAll(`#step-content-${currentStep} input`).forEach(inp => {
+      if (inp.name) formData[inp.name] = inp.value;
+    });
+  }
+
+  // ── Form submit ─────────────────────────────────────
+  document.getElementById('registration-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    if (!validateCurrentStep()) return;
+    saveCurrentStepData();
+
+    const btn = document.getElementById('submit-btn');
+    const orig = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<div class="spin"></div> Creating...';
+
+    fetch('/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData)
+    })
+    .then(res => res.json().then(data => ({ status: res.status, data })))
+    .then(({ status, data }) => {
+      if (status === 200 || status === 201) {
+        showToast('Credentials Registered!', 'success');
+        setTimeout(() => { window.location.href = '/space'; }, 2000);
+      } else if (status === 403) {
+        showToast(data.message || 'Registrations are currently disabled', 'error', 5000);
+        showRegistrationDisabledModal();
+        btn.disabled = false; btn.innerHTML = orig;
+      } else {
+        throw new Error(data.message || 'Registration failed');
+      }
+    })
+    .catch(err => {
+      showToast(err.message || 'Registration failed. Please try again.', 'error');
+      btn.disabled = false; btn.innerHTML = orig;
+    });
+  });
+
+  // ── Enter key ───────────────────────────────────────
+  document.querySelectorAll('.field-input').forEach(input => {
+    input.addEventListener('keypress', function(e) {
+      if (e.key !== 'Enter') return;
+      e.preventDefault();
+      currentStep < totalSteps
+        ? nextStep()
+        : document.getElementById('registration-form').dispatchEvent(new Event('submit'));
+    });
+  });
+
+  // ── Init ────────────────────────────────────────────
+  window.addEventListener('load', async () => {
+    const enabled = await checkRegistrationStatus();
+    if (enabled) setTimeout(() => { const n = document.getElementById('name'); if (n) n.focus(); }, 300);
+  });
+</script>
+</body>
+</html>

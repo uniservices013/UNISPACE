@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Error — UniSpace</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink:         #0a0a0f;
+            --indigo:      #6366f1;
+            --indigo-pale: #eef2ff;
+            --emerald:     #10b981;
+            --amber:       #f59e0b;
+            --red:         #ef4444;
+            --gray:        #6b7280;
+            --rule:        rgba(10,10,15,0.1);
+            --bg:          #fafaf8;
+            --ease:        cubic-bezier(.4,0,.2,1);
+        }
+
+        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+        html { overflow-x: hidden; }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg);
+            color: var(--ink);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── Texture overlay ── */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.4;
+        }
+
+        /* ── Large background text ── */
+        .bg-text {
+            position: fixed;
+            bottom: -2rem;
+            right: -1rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(6rem, 20vw, 18rem);
+            font-weight: 700;
+            color: rgba(239,68,68,0.04);
+            letter-spacing: -0.05em;
+            pointer-events: none;
+            z-index: 0;
+            line-height: 1;
+            user-select: none;
+        }
+
+        /* ── Main ── */
+        .main {
+            flex: 1;
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5rem 2rem;
+        }
+
+        .content {
+            max-width: 720px;
+            width: 100%;
+            animation: reveal 0.8s cubic-bezier(0.22,1,0.36,1) both;
+        }
+
+        @keyframes reveal {
+            from { opacity:0; transform:translateY(20px); }
+            to   { opacity:1; transform:translateY(0); }
+        }
+
+        /* ── Issue line ── */
+        .issue-line {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .issue-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--red);
+            background: rgba(239,68,68,0.07);
+            border: 1px solid rgba(239,68,68,0.2);
+            padding: 0.3rem 0.75rem;
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+
+        .status-dot {
+            width: 6px; height: 6px;
+            background: var(--red);
+            border-radius: 50%;
+            animation: blink 1.8s ease-in-out infinite;
+            flex-shrink: 0;
+        }
+
+        @keyframes blink {
+            0%,100% { opacity:1; }
+            50%      { opacity:0.25; }
+        }
+
+        .issue-rule {
+            flex: 1;
+            height: 1px;
+            background: var(--rule);
+        }
+
+        /* ── Headline ── */
+        .headline {
+            font-size: clamp(3rem, 8vw, 6.5rem);
+            font-weight: 700;
+            line-height: 0.95;
+            letter-spacing: -0.04em;
+            color: var(--ink);
+            margin-bottom: 0.5rem;
+        }
+
+        .headline em {
+            font-style: normal;
+            color: var(--red);
+        }
+
+        /* ── Deck ── */
+        .deck {
+            font-size: clamp(1rem, 2vw, 1.15rem);
+            font-weight: 400;
+            color: var(--gray);
+            line-height: 1.7;
+            margin: 1.25rem 0 2rem;
+            max-width: 520px;
+            border-left: 3px solid var(--red);
+            padding-left: 1.25rem;
+        }
+
+        /* ── H-rule ── */
+        .h-rule {
+            height: 1px;
+            background: var(--rule);
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .h-rule::after {
+            content: '◆';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%,-50%);
+            font-size: 0.6rem;
+            color: var(--red);
+            background: var(--bg);
+            padding: 0 0.5rem;
+        }
+
+        /* ── Three columns ── */
+        .columns {
+            display: grid;
+            grid-template-columns: 1fr 1px 1fr 1px 1fr;
+            gap: 0;
+            margin-bottom: 2rem;
+        }
+
+        .col-divider { background: var(--rule); }
+
+        .col { padding: 0 1.5rem; }
+        .col:first-child { padding-left: 0; }
+        .col:last-child  { padding-right: 0; }
+
+        .col-label {
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--gray);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .col-label i { color: var(--emerald); font-size: 0.6rem; }
+        .col-label i.red { color: var(--red); }
+        .col-label i.amber { color: var(--amber); }
+
+        .col-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--ink);
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+        }
+
+        .col-sub {
+            font-size: 0.78rem;
+            color: var(--gray);
+            margin-top: 0.25rem;
+        }
+
+        /* ── Bottom bar ── */
+        .bottom-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+            padding-top: 1.25rem;
+            border-top: 2px solid var(--ink);
+        }
+
+        .bottom-notice {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.82rem;
+            color: var(--gray);
+        }
+
+        .bottom-notice i { color: var(--emerald); }
+
+        .home-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.45rem 1.1rem;
+            background: var(--ink);
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            text-decoration: none;
+            transition: all 0.2s var(--ease);
+        }
+
+        .home-link:hover {
+            background: var(--indigo);
+            transform: translateY(-1px);
+        }
+
+        .home-link svg { width: 11px; height: 11px; }
+
+        /* ── Responsive ── */
+        @media (max-width: 600px) {
+            .columns { grid-template-columns: 1fr; gap: 1.25rem; }
+            .col-divider { display: none; }
+            .col { padding: 0; }
+            .bottom-bar { flex-direction: column; align-items: flex-start; }
+            .main { padding: 3.5rem 1.5rem; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,*::before,*::after { animation-duration:0.01ms!important; transition-duration:0.01ms!important; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-text">500</div>
+
+    <%- include('navbar') %>
+
+    <main class="main">
+        <div class="content">
+
+            <!-- Issue line -->
+            <div class="issue-line">
+                <div class="issue-tag">
+                    <span class="status-dot"></span>
+                    Server Error
+                </div>
+                <div class="issue-rule"></div>
+            </div>
+
+            <!-- Headline -->
+            <h1 class="headline">Something<br><em>broke.</em></h1>
+
+            <p class="deck">
+                Something went wrong on our end. This isn't your fault — we're already working to fix it.
+            </p>
+
+            <div class="h-rule"></div>
+
+            <!-- Status columns -->
+            <div class="columns">
+                <div class="col">
+                    <div class="col-label"><i class="fas fa-circle red"></i> Error</div>
+                    <div class="col-value">500</div>
+                    <div class="col-sub">Internal server error</div>
+                </div>
+                <div class="col-divider"></div>
+                <div class="col">
+                    <div class="col-label"><i class="fas fa-circle"></i> Your Files</div>
+                    <div class="col-value">100% Safe</div>
+                    <div class="col-sub">Nothing has changed</div>
+                </div>
+                <div class="col-divider"></div>
+                <div class="col">
+                    <div class="col-label"><i class="fas fa-circle amber"></i> Status</div>
+                    <div class="col-value">Investigating</div>
+                    <div class="col-sub">Team notified</div>
+                </div>
+            </div>
+
+            <!-- Bottom bar -->
+            <div class="bottom-bar">
+                <div class="bottom-notice">
+                    <i class="fas fa-shield-alt"></i>
+                    Your data is private &amp; protected.
+                </div>
+                <a href="/" class="home-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M19 12H5M12 5l-7 7 7 7"/>
+                    </svg>
+                    Back to Home
+                </a>
+            </div>
+
+        </div>
+    </main>
+
+    <%- include('footer') %>
+</body>
+</html>

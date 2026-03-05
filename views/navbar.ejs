@@ -1,0 +1,1178 @@
+<!-- Modern Minimal Fluid Navbar -->
+<nav class="navbar" id="navbar">
+    <div class="navbar-container">
+        <!-- Logo -->
+        <a href="/" class="logo">
+            <span class="logo-pill">
+                <!-- Open-sided gradient cube with separated faces -->
+                <svg class="logo-icon-svg" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="cubeTop" x1="7" y1="3" x2="21" y2="13" gradientUnits="userSpaceOnUse">
+                            <stop offset="0%" stop-color="#a5b4fc"/>
+                            <stop offset="100%" stop-color="#7c75f2"/>
+                        </linearGradient>
+                        <linearGradient id="cubeLeft" x1="3" y1="13" x2="14" y2="26" gradientUnits="userSpaceOnUse">
+                            <stop offset="0%" stop-color="#6366f1"/>
+                            <stop offset="100%" stop-color="#4338ca"/>
+                        </linearGradient>
+                        <linearGradient id="cubeRight" x1="14" y1="13" x2="25" y2="26" gradientUnits="userSpaceOnUse">
+                            <stop offset="0%" stop-color="#818cf8"/>
+                            <stop offset="100%" stop-color="#5b54e8"/>
+                        </linearGradient>
+                    </defs>
+                    <!-- Top face — shifted up by 1.2px gap -->
+                    <path d="M14 2L24.5 8L14 13.2L3.5 8Z" fill="url(#cubeTop)"/>
+                    <!-- Left face — shifted left by gap, starts below top face -->
+                    <path d="M3 9.2L13 14.5V25.5L3 20.2Z" fill="url(#cubeLeft)"/>
+                    <!-- Right face — shifted right by gap, starts below top face -->
+                    <path d="M25 9.2L15 14.5V25.5L25 20.2Z" fill="url(#cubeRight)"/>
+                </svg>
+                <span class="logo-wordmark"><span class="logo-uni">Uni</span><span class="logo-space">Space</span></span>
+            </span>
+        </a>
+
+        <!-- Auth Section -->
+        <div class="nav-actions">
+            <div class="auth-wrapper">
+                <button class="space-btn" id="spaceBtn" aria-label="Access your space">
+                    <span class="space-text">Space</span>
+                    <span class="space-arrow">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M6 9l6 6 6-6"/>
+                        </svg>
+                    </span>
+                </button>
+
+                <!-- Desktop Auth Panel -->
+                <div class="auth-panel" id="authPanel">
+                    <div class="auth-panel-content">
+                        <!-- Mode Selector -->
+                        <div class="mode-selector">
+                            <div class="mode-indicator" id="modeIndicator"></div>
+                            <button type="button" class="mode-btn active" id="userModeBtn">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="12" cy="7" r="4"/>
+                                </svg>
+                                <span>User</span>
+                            </button>
+                            <button type="button" class="mode-btn" id="adminModeBtn">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                </svg>
+                                <span>Admin</span>
+                            </button>
+                        </div>
+
+                        <!-- User Login Form -->
+                        <form action="/login" method="post" class="auth-form" id="userFormDesktop">
+                            <div class="form-title">
+                                <h3>Welcome Back</h3>
+                                <p>Access your personal space</p>
+                            </div>
+                            <div class="form-fields">
+                                <div class="field-group">
+                                    <input type="email" name="email" placeholder="Email address" required autocomplete="email">
+                                </div>
+                                <div class="field-group">
+                                    <input type="password" name="pass" placeholder="Password" required autocomplete="current-password">
+                                </div>
+                            </div>
+                            <button type="submit" class="submit-btn">
+                                <span>Sign In</span>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M5 12h14m-7-7l7 7-7 7"/>
+                                </svg>
+                            </button>
+                            <a href="/register" class="alt-link">
+                                <span>Create new account</span>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M5 12h14m-7-7l7 7-7 7"/>
+                                </svg>
+                            </a>
+                        </form>
+
+                        <!-- Admin Login Form -->
+                        <form action="/admin_login" method="POST" class="auth-form admin-form" id="adminFormDesktop" style="display: none;">
+                            <div class="form-title">
+                                <h3>Admin Access</h3>
+                                <p>Restricted area</p>
+                                <span class="admin-badge">Authorized personnel only</span>
+                            </div>
+                            <div class="form-fields">
+                                <div class="field-group">
+                                    <input type="email" name="email" placeholder="Admin email" required autocomplete="email">
+                                </div>
+                                <div class="field-group">
+                                    <input type="password" name="pass" placeholder="Admin password" required autocomplete="current-password">
+                                </div>
+                            </div>
+                            <button type="submit" class="submit-btn admin-submit">
+                                <span>Access Dashboard</span>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                </svg>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button class="menu-btn" id="menuBtn" aria-label="Menu">
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </div>
+</nav>
+
+<!-- Mobile Auth Modal (opened directly by hamburger on mobile) -->
+<div class="mobile-auth-modal" id="mobileAuthModal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-container">
+        <div class="modal-header">
+            <h2>Access Your Space</h2>
+            <button class="modal-close" id="modalCloseBtn" aria-label="Close">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 6L6 18M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <!-- Mode Selector -->
+            <div class="mode-selector">
+                <div class="mode-indicator" id="modeIndicatorMobile"></div>
+                <button type="button" class="mode-btn active" id="userModeBtnMobile">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                    <span>User</span>
+                </button>
+                <button type="button" class="mode-btn" id="adminModeBtnMobile">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    </svg>
+                    <span>Admin</span>
+                </button>
+            </div>
+
+            <!-- User Login Form -->
+            <form action="/login" method="post" class="auth-form" id="userFormMobile">
+                <div class="form-title">
+                    <h3>Welcome Back</h3>
+                    <p>Access your personal space</p>
+                </div>
+                <div class="form-fields">
+                    <div class="field-group">
+                        <input type="email" name="email" placeholder="Email address" required autocomplete="email">
+                    </div>
+                    <div class="field-group">
+                        <input type="password" name="pass" placeholder="Password" required autocomplete="current-password">
+                    </div>
+                </div>
+                <button type="submit" class="submit-btn">
+                    <span>Sign In</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14m-7-7l7 7-7 7"/>
+                    </svg>
+                </button>
+                <a href="/register" class="alt-link">
+                    <span>Create new account</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14m-7-7l7 7-7 7"/>
+                    </svg>
+                </a>
+            </form>
+
+            <!-- Admin Login Form -->
+            <form action="/admin_login" method="POST" class="auth-form admin-form" id="adminFormMobile" style="display: none;">
+                <div class="form-title">
+                    <h3>Admin Access</h3>
+                    <p>Restricted area</p>
+                    <span class="admin-badge">Authorized personnel only</span>
+                </div>
+                <div class="form-fields">
+                    <div class="field-group">
+                        <input type="email" name="email" placeholder="Admin email" required autocomplete="email">
+                    </div>
+                    <div class="field-group">
+                        <input type="password" name="pass" placeholder="Admin password" required autocomplete="current-password">
+                    </div>
+                </div>
+                <button type="submit" class="submit-btn admin-submit">
+                    <span>Access Dashboard</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    </svg>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+:root {
+    --primary: #6366f1;
+    --primary-dark: #4f46e5;
+    --primary-light: #818cf8;
+    --admin: #dc2626;
+    --admin-dark: #b91c1c;
+    --dark: #0f172a;
+    --gray: #64748b;
+    --gray-light: #94a3b8;
+    --bg: #f8fafc;
+    --white: #ffffff;
+    --border: rgba(226, 232, 240, 0.8);
+    --shadow: rgba(15, 23, 42, 0.05);
+    --ease: cubic-bezier(0.4, 0, 0.2, 1);
+    --error: #dc2626;
+    --error-light: #fef2f2;
+    --success: #16a34a;
+    --success-light: #f0fdf4;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--dark);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
+}
+
+/* ============================================
+   NAVBAR
+============================================ */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    padding: 1rem 0;
+    transition: all 0.3s var(--ease);
+}
+
+.navbar::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    opacity: 0;
+    transition: opacity 0.3s var(--ease);
+}
+
+.navbar.scrolled::before {
+    opacity: 1;
+}
+
+.navbar-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 clamp(1rem, 4vw, 3rem);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    position: relative;
+}
+
+/* ============================================
+   LOGO — pill wordmark, no icon
+============================================ */
+.logo {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    position: relative;
+    z-index: 10;
+}
+
+.logo-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.4rem 1rem 0.4rem 0.55rem;
+    border: 1.5px solid var(--border);
+    border-radius: 999px;
+    background: white;
+    box-shadow: 0 1px 4px var(--shadow);
+    transition: box-shadow 0.25s var(--ease), border-color 0.25s var(--ease);
+    line-height: 1;
+    gap: 0.45rem;
+}
+
+.logo-icon-svg {
+    width: 26px;
+    height: 26px;
+    flex-shrink: 0;
+    display: block;
+}
+
+.logo:hover .logo-pill {
+    border-color: rgba(99, 102, 241, 0.35);
+    box-shadow: 0 2px 10px rgba(99, 102, 241, 0.1);
+}
+
+.logo-wordmark {
+    display: inline-flex;
+    align-items: baseline;
+    font-size: 0;
+    font-family: 'Space Grotesk', sans-serif;
+}
+
+.logo-uni {
+    font-size: clamp(1.05rem, 2.2vw, 1.3rem);
+    font-weight: 700;
+    color: #4f46e5;
+    letter-spacing: -0.01em;
+}
+
+.logo-space {
+    font-size: clamp(1.05rem, 2.2vw, 1.3rem);
+    font-weight: 700;
+    color: var(--dark);
+    letter-spacing: -0.01em;
+    margin-left: 0;
+}
+
+/* ============================================
+   AUTH SECTION
+============================================ */
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.auth-wrapper {
+    position: relative;
+}
+
+.space-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1rem;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--dark);
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s var(--ease);
+}
+
+.space-btn:hover {
+    border-color: var(--primary);
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.1);
+}
+
+.space-btn.active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+}
+
+.space-arrow svg {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.3s var(--ease);
+}
+
+.space-btn.active .space-arrow svg {
+    transform: rotate(180deg);
+}
+
+/* Auth Panel */
+.auth-panel {
+    position: absolute;
+    top: calc(100% + 1rem);
+    right: 0;
+    width: min(340px, 90vw);
+    background: white;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    box-shadow: 0 8px 32px rgba(15, 23, 42, 0.08);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px) scale(0.95);
+    transform-origin: top right;
+    transition: all 0.3s var(--ease);
+    overflow: hidden;
+}
+
+.auth-panel.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+}
+
+.auth-panel-content {
+    padding: 1.5rem;
+}
+
+/* Mode Selector */
+.mode-selector {
+    display: flex;
+    gap: 0.375rem;
+    background: var(--bg);
+    padding: 0.375rem;
+    border-radius: 10px;
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.mode-indicator {
+    position: absolute;
+    top: 0.375rem;
+    left: 0.375rem;
+    width: calc(50% - 0.375rem);
+    height: calc(100% - 0.75rem);
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px var(--shadow);
+    transition: transform 0.3s var(--ease);
+}
+
+.mode-indicator.admin {
+    transform: translateX(calc(100% + 0.375rem));
+}
+
+.mode-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.625rem;
+    background: transparent;
+    border: none;
+    color: var(--gray);
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s var(--ease);
+    position: relative;
+    z-index: 1;
+}
+
+.mode-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+.mode-btn.active {
+    color: var(--dark);
+}
+
+/* Auth Form */
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.form-title {
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+.form-title h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 0.375rem;
+    letter-spacing: -0.02em;
+}
+
+.form-title p {
+    font-size: 0.875rem;
+    color: var(--gray);
+}
+
+.admin-badge {
+    display: inline-block;
+    margin-top: 0.5rem;
+    padding: 0.25rem 0.75rem;
+    background: rgba(220, 38, 38, 0.1);
+    color: var(--admin);
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* ============================================
+   ERROR & SUCCESS MESSAGES
+============================================ */
+.form-error, .form-success {
+    margin: 0.75rem 0;
+    animation: fadeIn 0.3s var(--ease);
+}
+
+.error-message, .success-message {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    border-radius: 10px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.error-message {
+    background: linear-gradient(135deg, var(--error-light), #fee2e2);
+    border: 1px solid #fecaca;
+    color: var(--error);
+}
+
+.success-message {
+    background: linear-gradient(135deg, var(--success-light), #dcfce7);
+    border: 1px solid #bbf7d0;
+    color: var(--success);
+}
+
+.error-message svg, .success-message svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+.error-message svg { color: var(--error); }
+.success-message svg { color: var(--success); }
+
+/* Form Fields */
+.form-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.field-group {
+    position: relative;
+}
+
+.field-group input {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--dark);
+    font-size: 0.9rem;
+    outline: none;
+    transition: all 0.2s var(--ease);
+}
+
+.field-group input::placeholder {
+    color: var(--gray-light);
+}
+
+.field-group input:focus {
+    border-color: var(--primary);
+    background: white;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.05);
+}
+
+.field-group input.error {
+    border-color: var(--error);
+    background: var(--error-light);
+}
+
+.field-group input.error:focus {
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.05);
+}
+
+.admin-form .field-group input:focus {
+    border-color: var(--admin);
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.05);
+}
+
+/* Submit Button */
+.submit-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.875rem 1.25rem;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s var(--ease);
+    position: relative;
+}
+
+.submit-btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.submit-btn:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.submit-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.submit-btn.loading {
+    pointer-events: none;
+}
+
+.submit-btn.loading::after {
+    content: '';
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 0.8s linear infinite;
+    right: 1rem;
+}
+
+.submit-btn.loading svg {
+    opacity: 0;
+}
+
+.submit-btn svg {
+    width: 18px;
+    height: 18px;
+    transition: opacity 0.2s var(--ease);
+}
+
+.admin-submit {
+    background: linear-gradient(135deg, var(--admin), var(--admin-dark));
+}
+
+.admin-submit:hover:not(:disabled) {
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+}
+
+.alt-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    padding: 0.75rem;
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 8px;
+    transition: all 0.2s var(--ease);
+}
+
+.alt-link:hover {
+    background: rgba(99, 102, 241, 0.05);
+}
+
+.alt-link svg {
+    width: 14px;
+    height: 14px;
+}
+
+/* ============================================
+   MOBILE MENU BUTTON
+============================================ */
+.menu-btn {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    position: relative;
+    z-index: 10;
+}
+
+.menu-btn span {
+    width: 100%;
+    height: 2px;
+    background: var(--dark);
+    border-radius: 2px;
+    transition: all 0.3s var(--ease);
+}
+
+.menu-btn span:last-child {
+    margin-top: 6px;
+}
+
+/* Hamburger animates to X when modal is open */
+.menu-btn.active span:first-child {
+    transform: rotate(45deg) translateY(4px);
+}
+
+.menu-btn.active span:last-child {
+    transform: rotate(-45deg) translateY(-4px);
+}
+
+/* ============================================
+   MOBILE AUTH MODAL
+============================================ */
+.mobile-auth-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s var(--ease);
+}
+
+.mobile-auth-modal.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+.modal-container {
+    position: relative;
+    width: 100%;
+    max-width: 480px;
+    max-height: 90vh;
+    background: white;
+    border-radius: 24px 24px 0 0;
+    overflow-y: auto;
+    transform: translateY(100%);
+    transition: transform 0.4s var(--ease);
+}
+
+.mobile-auth-modal.show .modal-container {
+    transform: translateY(0);
+}
+
+.modal-header {
+    position: sticky;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem;
+    background: white;
+    border-bottom: 1px solid var(--border);
+    z-index: 10;
+}
+
+.modal-header h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--dark);
+    letter-spacing: -0.02em;
+}
+
+.modal-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: var(--bg);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s var(--ease);
+    flex-shrink: 0;
+}
+
+.modal-close:hover {
+    background: var(--border);
+}
+
+.modal-close svg {
+    width: 18px;
+    height: 18px;
+    color: var(--gray);
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+/* ============================================
+   ANIMATIONS
+============================================ */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes shake {
+    0%, 100%            { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-2px); }
+    20%, 40%, 60%, 80%  { transform: translateX(2px); }
+}
+
+.error-shake {
+    animation: shake 0.5s var(--ease);
+}
+
+/* ============================================
+   RESPONSIVE
+============================================ */
+@media (max-width: 992px) {
+    .space-btn  { display: none; }
+    .auth-wrapper { display: none; }
+    .menu-btn   { display: flex; }
+}
+
+@media (max-width: 768px) {
+    .logo-pill { padding: 0.4rem 0.9rem; }
+}
+
+@media (max-width: 640px) {
+    .navbar { padding: 0.75rem 0; }
+    .navbar-container { padding: 0 1rem; gap: 1rem; }
+}
+
+@media (max-width: 480px) {
+    .navbar-container { padding: 0 0.75rem; }
+}
+
+/* Prevent body scroll when modal is open */
+body.modal-open {
+    overflow: hidden;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+    // ============================================
+    // UTILITIES
+    // ============================================
+    const isMobile = () => window.innerWidth <= 992;
+
+    // ============================================
+    // NAVBAR SCROLL EFFECT
+    // ============================================
+    const navbar = document.getElementById('navbar');
+    let scrollTimeout;
+
+    window.addEventListener('scroll', () => {
+        if (!scrollTimeout) {
+            scrollTimeout = setTimeout(() => {
+                navbar.classList.toggle('scrolled', window.pageYOffset > 20);
+                scrollTimeout = null;
+            }, 10);
+        }
+    }, { passive: true });
+
+    // ============================================
+    // ERROR / SUCCESS HELPERS
+    // ============================================
+    function showFormError(formElement, message) {
+        clearFormError(formElement);
+
+        const errorEl = document.createElement('div');
+        errorEl.className = 'form-error';
+        errorEl.innerHTML = `
+            <div class="error-message">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+                <span>${message}</span>
+            </div>`;
+
+        formElement.querySelectorAll('input').forEach(i => i.classList.add('error'));
+
+        const title = formElement.querySelector('.form-title');
+        if (title) title.parentNode.insertBefore(errorEl, title.nextSibling);
+
+        formElement.classList.add('error-shake');
+        setTimeout(() => formElement.classList.remove('error-shake'), 500);
+    }
+
+    function clearFormError(formElement) {
+        formElement.querySelector('.form-error')?.remove();
+        formElement.querySelector('.form-success')?.remove();
+        formElement.querySelectorAll('input').forEach(i => i.classList.remove('error'));
+    }
+
+    function showFormSuccess(formElement, message) {
+        clearFormError(formElement);
+        const el = document.createElement('div');
+        el.className = 'form-success';
+        el.innerHTML = `
+            <div class="success-message">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                    <polyline points="22 4 12 14.01 9 11.01"/>
+                </svg>
+                <span>${message}</span>
+            </div>`;
+        const title = formElement.querySelector('.form-title');
+        if (title) title.parentNode.insertBefore(el, title.nextSibling);
+    }
+
+    function setButtonLoading(button, isLoading) {
+        const span = button.querySelector('span');
+        if (isLoading) {
+            button.classList.add('loading');
+            button.disabled = true;
+            if (span) span.textContent = 'Signing In...';
+        } else {
+            button.classList.remove('loading');
+            button.disabled = false;
+            if (span) span.textContent = button.classList.contains('admin-submit') ? 'Access Dashboard' : 'Sign In';
+        }
+    }
+
+    // ============================================
+    // FORM SUBMISSION
+    // ============================================
+    function handleFormSubmission(formElement, endpoint) {
+        return async function(e) {
+            e.preventDefault();
+            clearFormError(formElement);
+
+            const data = Object.fromEntries(new FormData(formElement).entries());
+
+            if (!data.email || !data.pass) {
+                showFormError(formElement, 'Please fill in all fields.');
+                return;
+            }
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
+                showFormError(formElement, 'Please enter a valid email address.');
+                return;
+            }
+
+            const submitBtn = formElement.querySelector('.submit-btn');
+            setButtonLoading(submitBtn, true);
+
+            try {
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+
+                if (result.success) {
+                    showFormSuccess(formElement, result.message || 'Login successful!');
+                    setTimeout(() => {
+                        authPanel?.classList.remove('show');
+                        spaceBtn?.classList.remove('active');
+                        closeMobileModal();
+                        window.location.href = result.redirect || '/';
+                    }, 1500);
+                } else {
+                    showFormError(formElement, result.message || 'Login failed. Please try again.');
+                }
+            } catch {
+                showFormError(formElement, 'Network error. Please check your connection and try again.');
+            } finally {
+                setButtonLoading(submitBtn, false);
+            }
+        };
+    }
+
+    // ============================================
+    // ELEMENT REFS
+    // ============================================
+    const spaceBtn           = document.getElementById('spaceBtn');
+    const authPanel          = document.getElementById('authPanel');
+    const userModeBtn        = document.getElementById('userModeBtn');
+    const adminModeBtn       = document.getElementById('adminModeBtn');
+    const userFormDesktop    = document.getElementById('userFormDesktop');
+    const adminFormDesktop   = document.getElementById('adminFormDesktop');
+    const modeIndicator      = document.getElementById('modeIndicator');
+    const menuBtn            = document.getElementById('menuBtn');
+    const mobileAuthModal    = document.getElementById('mobileAuthModal');
+    const modalCloseBtn      = document.getElementById('modalCloseBtn');
+    const modalBackdrop      = document.querySelector('.modal-backdrop');
+    const userModeBtnMobile  = document.getElementById('userModeBtnMobile');
+    const adminModeBtnMobile = document.getElementById('adminModeBtnMobile');
+    const userFormMobile     = document.getElementById('userFormMobile');
+    const adminFormMobile    = document.getElementById('adminFormMobile');
+    const modeIndicatorMobile = document.getElementById('modeIndicatorMobile');
+
+    // ============================================
+    // MOBILE MODAL HELPERS
+    // ============================================
+    function openMobileModal() {
+        mobileAuthModal.classList.add('show');
+        menuBtn.classList.add('active');
+        document.body.classList.add('modal-open');
+        clearFormError(userFormMobile);
+        clearFormError(adminFormMobile);
+    }
+
+    function closeMobileModal() {
+        mobileAuthModal.classList.remove('show');
+        menuBtn.classList.remove('active');
+        document.body.classList.remove('modal-open');
+        clearFormError(userFormMobile);
+        clearFormError(adminFormMobile);
+    }
+
+    // ============================================
+    // HAMBURGER → directly opens auth modal
+    // ============================================
+    if (menuBtn) {
+        menuBtn.addEventListener('click', () => {
+            if (mobileAuthModal.classList.contains('show')) {
+                closeMobileModal();
+            } else {
+                openMobileModal();
+            }
+        });
+    }
+
+    // ============================================
+    // DESKTOP AUTH PANEL
+    // ============================================
+    if (spaceBtn && authPanel) {
+        spaceBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (!isMobile()) {
+                const isOpen = authPanel.classList.toggle('show');
+                spaceBtn.classList.toggle('active', isOpen);
+                if (isOpen) {
+                    clearFormError(userFormDesktop);
+                    clearFormError(adminFormDesktop);
+                }
+            }
+        });
+    }
+
+    // Desktop mode switching
+    if (userModeBtn && adminModeBtn) {
+        const switchMode = (isAdmin) => {
+            userModeBtn.classList.toggle('active', !isAdmin);
+            adminModeBtn.classList.toggle('active', isAdmin);
+            userFormDesktop.style.display  = isAdmin ? 'none' : 'flex';
+            adminFormDesktop.style.display = isAdmin ? 'flex' : 'none';
+            modeIndicator.classList.toggle('admin', isAdmin);
+            clearFormError(userFormDesktop);
+            clearFormError(adminFormDesktop);
+        };
+        userModeBtn.addEventListener('click',  () => switchMode(false));
+        adminModeBtn.addEventListener('click', () => switchMode(true));
+    }
+
+    // ============================================
+    // CLOSE MODAL HANDLERS
+    // ============================================
+    modalCloseBtn?.addEventListener('click', closeMobileModal);
+    modalBackdrop?.addEventListener('click', closeMobileModal);
+
+    // Mobile mode switching
+    if (userModeBtnMobile && adminModeBtnMobile) {
+        const switchMobileMode = (isAdmin) => {
+            userModeBtnMobile.classList.toggle('active', !isAdmin);
+            adminModeBtnMobile.classList.toggle('active', isAdmin);
+            userFormMobile.style.display  = isAdmin ? 'none' : 'flex';
+            adminFormMobile.style.display = isAdmin ? 'flex' : 'none';
+            modeIndicatorMobile.classList.toggle('admin', isAdmin);
+            clearFormError(userFormMobile);
+            clearFormError(adminFormMobile);
+        };
+        userModeBtnMobile.addEventListener('click',  () => switchMobileMode(false));
+        adminModeBtnMobile.addEventListener('click', () => switchMobileMode(true));
+    }
+
+    // ============================================
+    // FORM HANDLERS
+    // ============================================
+    userFormDesktop?.addEventListener('submit',  handleFormSubmission(userFormDesktop,  '/login'));
+    adminFormDesktop?.addEventListener('submit', handleFormSubmission(adminFormDesktop, '/admin_login'));
+    userFormMobile?.addEventListener('submit',   handleFormSubmission(userFormMobile,   '/login'));
+    adminFormMobile?.addEventListener('submit',  handleFormSubmission(adminFormMobile,  '/admin_login'));
+
+    document.querySelectorAll('.field-group input').forEach(input => {
+        input.addEventListener('input', function() {
+            const form = this.closest('.auth-form');
+            if (form) clearFormError(form);
+        });
+    });
+
+    // ============================================
+    // GLOBAL EVENTS
+    // ============================================
+    document.addEventListener('click', (e) => {
+        if (!isMobile() && authPanel && spaceBtn) {
+            if (!authPanel.contains(e.target) && !spaceBtn.contains(e.target)) {
+                authPanel.classList.remove('show');
+                spaceBtn.classList.remove('active');
+                clearFormError(userFormDesktop);
+                clearFormError(adminFormDesktop);
+            }
+        }
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            authPanel?.classList.remove('show');
+            spaceBtn?.classList.remove('active');
+            closeMobileModal();
+        }
+    });
+
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+            if (!isMobile()) {
+                closeMobileModal();
+            } else {
+                authPanel?.classList.remove('show');
+                spaceBtn?.classList.remove('active');
+            }
+        }, 250);
+    });
+});
+</script>

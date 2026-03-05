@@ -1,0 +1,4664 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="headlogo.png" type="image/png">
+    <title>My Space - UniSpace</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #f0f0ec;
+            --surface: #ffffff;
+            --surface-2: #f5f5f2;
+            --surface-3: #eeeeea;
+            --border: rgba(10, 10, 15, 0.08);
+            --border-strong: rgba(10, 10, 15, 0.15);
+            --ink: #0a0a0f;
+            --gray: #6b7280;
+            --gray-light: #9ca3af;
+            --accent: #6366f1;
+            --accent-pale: #eef2ff;
+            --accent-border: rgba(99, 102, 241, 0.2);
+            --emerald: #10b981;
+            --emerald-pale: #ecfdf5;
+            --amber: #f59e0b;
+            --amber-pale: #fffbeb;
+            --danger: #dc2626;
+            --danger-pale: #fef2f2;
+            --danger-border: rgba(220, 38, 38, 0.2);
+            --teal: #0891b2;
+            --teal-pale: #ecfeff;
+            --sidebar-width: 240px;
+            --sidebar-collapsed-width: 64px;
+            --radius: 12px;
+            --radius-sm: 8px;
+            --radius-lg: 16px;
+            --shadow: 0 4px 24px rgba(0, 0, 0, 0.07), 0 1px 4px rgba(0, 0, 0, 0.04);
+            --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
+            --sidebar-bg: rgba(255, 255, 255, 0.92);
+            --welcome-bg: #0a0a0f;
+        }
+
+        [data-theme="dark"] {
+            --bg: #0d0d14;
+            --surface: #161620;
+            --surface-2: #1c1c28;
+            --surface-3: #232333;
+            --border: rgba(255, 255, 255, 0.07);
+            --border-strong: rgba(255, 255, 255, 0.12);
+            --ink: #f0f0f5;
+            --gray: #9ca3af;
+            --gray-light: #6b7280;
+            --accent: #818cf8;
+            --accent-pale: #1e1e2a;
+            --accent-border: rgba(129, 140, 248, 0.2);
+            --emerald: #34d399;
+            --emerald-pale: #0a1f18;
+            --amber: #fbbf24;
+            --amber-pale: #1a1400;
+            --danger: #f87171;
+            --danger-pale: #1f0a0a;
+            --danger-border: rgba(248, 113, 113, 0.2);
+            --teal: #22d3ee;
+            --teal-pale: #0a1f25;
+            --shadow: 0 4px 24px rgba(0, 0, 0, 0.3), 0 1px 4px rgba(0, 0, 0, 0.2);
+            --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.3);
+            --sidebar-bg: rgba(22, 22, 32, 0.92);
+            --welcome-bg: #111118;
+        }
+
+        /* ── NOISE TEXTURE OVERLAY ── */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.4;
+        }
+
+        body {
+            font-family: 'Space Grotesk', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--ink);
+            min-height: 100vh;
+            font-size: 14px;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        *,
+        input,
+        button,
+        select,
+        textarea,
+        label {
+            font-family: 'Space Grotesk', -apple-system, sans-serif;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ══ TOAST ══ */
+        .toast {
+            position: fixed;
+            bottom: 1.25rem;
+            right: 1.25rem;
+            z-index: 9000;
+            background: var(--ink);
+            color: var(--bg);
+            padding: .6rem 1rem;
+            border-radius: var(--radius-sm);
+            font-size: .75rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: var(--shadow-lg);
+            transform: translateY(16px) scale(0.96);
+            opacity: 0;
+            transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease;
+            pointer-events: none;
+            min-width: 200px;
+            max-width: 340px;
+        }
+
+        .toast.show {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+        }
+
+        .toast i {
+            font-size: .7rem;
+            flex-shrink: 0;
+        }
+
+        /* ── FLOATING SIDEBAR ── */
+        .sidebar {
+            background: var(--sidebar-bg);
+            backdrop-filter: blur(20px) saturate(1.8);
+            -webkit-backdrop-filter: blur(20px) saturate(1.8);
+            border-right: none;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg), inset 0 0 0 1px var(--border);
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 16px;
+            left: 16px;
+            height: calc(100vh - 32px);
+            overflow: hidden;
+            width: var(--sidebar-width);
+            min-width: var(--sidebar-width);
+            z-index: 100;
+            transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                min-width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .layout.sidebar-collapsed .sidebar {
+            width: var(--sidebar-collapsed-width);
+            min-width: var(--sidebar-collapsed-width);
+        }
+
+        .main-wrapper {
+            margin-left: calc(var(--sidebar-width) + 32px);
+            flex: 1;
+            min-width: 0;
+            transition: margin-left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 16px 16px 16px 0;
+        }
+
+        .layout.sidebar-collapsed .main-wrapper {
+            margin-left: calc(var(--sidebar-collapsed-width) + 32px);
+        }
+
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 18px 18px;
+            border-bottom: 1px solid var(--border);
+            min-height: 60px;
+        }
+
+        .logo {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--ink);
+            letter-spacing: -0.04em;
+            white-space: nowrap;
+            overflow: hidden;
+            opacity: 1;
+            max-width: 160px;
+            transition: opacity 0.25s ease, max-width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        .layout.sidebar-collapsed .logo {
+            opacity: 0;
+            max-width: 0;
+            pointer-events: none;
+        }
+
+        .collapse-btn {
+            background: none;
+            border: 1px solid var(--border-strong);
+            border-radius: var(--radius-sm);
+            width: 26px;
+            height: 26px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--gray);
+            flex-shrink: 0;
+            font-size: 10px;
+            transition: border-color 0.15s, color 0.15s, background 0.15s;
+        }
+
+        .collapse-btn:hover {
+            border-color: var(--ink);
+            color: var(--ink);
+            background: var(--surface-2);
+        }
+
+        .collapse-btn i {
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .layout.sidebar-collapsed .collapse-btn i {
+            transform: rotate(180deg);
+        }
+
+        /* User strip */
+        .sidebar-user-strip {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .sidebar-user-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: var(--radius-sm);
+            background: var(--ink);
+            color: var(--bg);
+            font-size: 11px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            letter-spacing: -0.02em;
+        }
+
+        .sidebar-user-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            overflow: hidden;
+            opacity: 1;
+            transition: opacity 0.2s ease;
+        }
+
+        .layout.sidebar-collapsed .sidebar-user-info {
+            opacity: 0;
+            width: 0;
+            overflow: hidden;
+        }
+
+        .layout.sidebar-collapsed .sidebar-user-strip {
+            gap: 0;
+        }
+
+        .sidebar-user-name {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--ink);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .sidebar-user-email {
+            font-size: 10px;
+            color: var(--gray-light);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .nav-section-label {
+            padding: 14px 18px 6px;
+            font-size: 9px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--gray-light);
+            white-space: nowrap;
+            overflow: hidden;
+            opacity: 1;
+            transition: opacity 0.25s ease, height 0.35s cubic-bezier(0.4, 0, 0.2, 1), padding 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            height: 30px;
+        }
+
+        .layout.sidebar-collapsed .nav-section-label {
+            opacity: 0;
+            height: 0;
+            padding: 0;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 18px;
+            cursor: pointer;
+            color: var(--gray);
+            font-size: 13px;
+            font-weight: 500;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            white-space: nowrap;
+            overflow: hidden;
+            border-left: 2px solid transparent;
+            transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+        }
+
+        .nav-item:hover {
+            color: var(--ink);
+            background: var(--surface-2);
+        }
+
+        .nav-item.active {
+            color: var(--accent);
+            border-left-color: var(--accent);
+            background: var(--accent-pale);
+            font-weight: 600;
+        }
+
+        .nav-icon {
+            width: 14px;
+            height: 14px;
+            flex-shrink: 0;
+            stroke-width: 2;
+        }
+
+        .nav-item>.nav-label {
+            overflow: hidden;
+            opacity: 1;
+            flex: 1;
+            transition: opacity 0.25s ease;
+        }
+
+        .layout.sidebar-collapsed .nav-item>.nav-label {
+            opacity: 0;
+            width: 0;
+            flex: 0;
+        }
+
+        .nav-badge {
+            margin-left: auto;
+            background: var(--surface-3);
+            color: var(--gray);
+            font-size: 10px;
+            padding: 1px 6px;
+            border-radius: 20px;
+            font-weight: 600;
+            opacity: 1;
+            transition: opacity 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .nav-item.active .nav-badge {
+            background: var(--accent-pale);
+            color: var(--accent);
+            border: 1px solid var(--accent-border);
+        }
+
+        .layout.sidebar-collapsed .nav-badge {
+            opacity: 0;
+            width: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .nav-divider {
+            height: 1px;
+            background: var(--border);
+            margin: 8px 0;
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+            border-top: 1px solid var(--border);
+            padding: 8px 0;
+        }
+
+        .dark-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 9px 18px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            width: 100%;
+            color: var(--gray);
+            font-size: 13px;
+            transition: background 0.2s, color 0.2s;
+            overflow: hidden;
+            border-left: 2px solid transparent;
+            border-radius: 0;
+        }
+
+        .dark-toggle:hover {
+            background: var(--surface-2);
+            color: var(--ink);
+        }
+
+        .toggle-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            overflow: hidden;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .toggle-moon-icon {
+            flex-shrink: 0;
+            width: 13px;
+            height: 13px;
+        }
+
+        .toggle-text {
+            opacity: 1;
+            transition: opacity 0.25s ease, max-width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            white-space: nowrap;
+            overflow: hidden;
+            max-width: 120px;
+        }
+
+        .layout.sidebar-collapsed .toggle-text {
+            opacity: 0;
+            max-width: 0;
+        }
+
+        .toggle-switch {
+            width: 28px;
+            height: 16px;
+            background: var(--border-strong);
+            border-radius: 20px;
+            position: relative;
+            flex-shrink: 0;
+            opacity: 1;
+            transition: opacity 0.25s ease, max-width 0.35s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s ease;
+            max-width: 28px;
+            overflow: hidden;
+        }
+
+        .layout.sidebar-collapsed .toggle-switch {
+            opacity: 0;
+            max-width: 0;
+        }
+
+        [data-theme="dark"] .toggle-switch {
+            background: var(--accent);
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: white;
+            border-radius: 50%;
+            top: 3px;
+            left: 3px;
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        [data-theme="dark"] .toggle-switch::after {
+            transform: translateX(12px);
+        }
+
+        .sidebar-signout {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 18px;
+            cursor: pointer;
+            color: var(--gray);
+            font-size: 13px;
+            font-weight: 500;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            white-space: nowrap;
+            overflow: hidden;
+            text-decoration: none;
+            border-left: 2px solid transparent;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .sidebar-signout:hover {
+            background: var(--danger-pale);
+            color: var(--danger);
+        }
+
+        .sidebar-signout .signout-icon {
+            width: 14px;
+            height: 14px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-signout .signout-label {
+            opacity: 1;
+            transition: opacity 0.2s ease;
+            overflow: hidden;
+        }
+
+        .layout.sidebar-collapsed .sidebar-signout .signout-label {
+            opacity: 0;
+            width: 0;
+        }
+
+        /* ── MAIN ── */
+        .main {
+            flex: 1;
+            min-width: 0;
+            padding: 24px 24px 56px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        /* ── SECTION HEADER ── */
+        .page-header {
+            margin-bottom: 32px;
+        }
+
+        .page-header-line {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .page-issue-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--accent);
+            background: var(--accent-pale);
+            border: 1px solid var(--accent-border);
+            padding: 0.28rem 0.7rem;
+            border-radius: 20px;
+            white-space: nowrap;
+        }
+
+        .status-blink {
+            width: 5px;
+            height: 5px;
+            background: var(--amber);
+            border-radius: 50%;
+            animation: blink 1.8s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.3;
+            }
+        }
+
+        .page-rule {
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .page-headline {
+            font-size: clamp(26px, 4vw, 42px);
+            font-weight: 700;
+            letter-spacing: -0.04em;
+            line-height: 0.95;
+            color: var(--ink);
+        }
+
+        .page-headline em {
+            font-style: normal;
+            color: var(--accent);
+        }
+
+        .page-sub {
+            font-size: 13px;
+            color: var(--gray);
+            margin-top: 8px;
+            padding-left: 0;
+        }
+
+        /* ── TAB CONTENT ── */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            animation: tabReveal 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+
+        @keyframes tabReveal {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ── CARD SYSTEM ── */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .card-label {
+            font-size: 9px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--gray-light);
+            margin-bottom: 4px;
+        }
+
+        .card-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--ink);
+            letter-spacing: -0.03em;
+        }
+
+        /* ── GRID LAYOUTS — separated with gap ── */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1.8fr 1fr 1fr;
+            gap: 16px;
+            margin-top: 0;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .grid-2-asymm {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .single-card {
+            margin-top: 16px;
+        }
+
+        /* ── WELCOME CARD ── */
+        .welcome-card {
+            background: var(--welcome-bg);
+            border-radius: var(--radius);
+            padding: 28px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            margin-bottom: 16px;
+        }
+
+        .welcome-card::before {
+            content: '';
+            position: absolute;
+            top: -60px;
+            right: -40px;
+            width: 280px;
+            height: 280px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .welcome-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            opacity: 0.5;
+        }
+
+        .welcome-left {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .welcome-eyebrow {
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .welcome-eyebrow .live-dot {
+            width: 5px;
+            height: 5px;
+            background: #34d399;
+            border-radius: 50%;
+            animation: blink 2.4s ease-in-out infinite;
+        }
+
+        .welcome-heading {
+            font-size: clamp(20px, 3vw, 32px);
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: -0.04em;
+            line-height: 1;
+        }
+
+        .welcome-heading em {
+            font-style: normal;
+            color: var(--accent);
+        }
+
+        .welcome-sub {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.4);
+            margin-top: 4px;
+        }
+
+        .welcome-right {
+            position: relative;
+            z-index: 1;
+            flex-shrink: 0;
+        }
+
+        /* ── BUTTONS ── */
+        .btn {
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            font-size: 12.5px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: inherit;
+            transition: background 0.2s, border-color 0.2s, opacity 0.2s, box-shadow 0.2s;
+            letter-spacing: -0.01em;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+            border: 1px solid var(--accent);
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.25);
+        }
+
+        .btn-primary:hover {
+            opacity: 0.88;
+            box-shadow: 0 4px 16px rgba(99, 102, 241, 0.35);
+        }
+
+        .btn-ink:hover {
+            background: rgba(255, 255, 255, 0.18);
+        }
+
+        .btn-edit:hover {
+            opacity: 0.8;
+        }
+
+        .btn-browse:hover {
+            opacity: 0.8;
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--gray);
+            border: 1px solid var(--border-strong);
+            text-decoration: none;
+        }
+
+        .btn-ghost:hover {
+            border-color: var(--ink);
+            color: var(--ink);
+        }
+
+        .btn-ink {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(8px);
+        }
+
+        .btn-ink:hover {
+            background: rgba(255, 255, 255, 0.18);
+        }
+
+        .btn-edit {
+            background: var(--accent-pale);
+            color: var(--accent);
+            border: 1px solid var(--accent-border);
+            text-decoration: none;
+        }
+
+        .btn-edit:hover {
+            opacity: 0.8;
+        }
+
+        .btn-signout {
+            background: var(--surface-2);
+            color: var(--gray);
+            border: 1px solid var(--border-strong);
+            text-decoration: none;
+        }
+
+        .btn-signout:hover {
+            background: var(--surface-3);
+            color: var(--ink);
+        }
+
+        .btn-security {
+            background: var(--amber-pale);
+            color: var(--amber);
+            border: 1px solid rgba(245, 158, 11, 0.25);
+        }
+
+        .btn-security:hover {
+            opacity: 0.85;
+        }
+
+        .btn-danger {
+            background: var(--danger-pale);
+            color: var(--danger);
+            border: 1px solid var(--danger-border);
+        }
+
+        .btn-danger:hover {
+            background: var(--danger);
+            color: #fff;
+            border-color: var(--danger);
+        }
+
+        .btn-browse {
+            background: var(--accent-pale);
+            color: var(--accent);
+            border: 1px solid var(--accent-border);
+        }
+
+        .btn-browse:hover {
+            opacity: 0.8;
+        }
+
+        /* ── PROFILE CARD ── */
+        .profile-card {
+            display: flex;
+            flex-direction: row;
+            align-items: stretch;
+            background: var(--surface);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+
+        .profile-left {
+            width: 38%;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 28px 20px;
+            background: var(--surface-2);
+            border-right: 1px solid var(--border);
+            position: relative;
+        }
+
+        .profile-left::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(var(--border) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border) 1px, transparent 1px);
+            background-size: 24px 24px;
+            opacity: 0.4;
+            pointer-events: none;
+        }
+
+        .profile-left-inner {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .avatar-wrap {
+            width: 100px;
+            height: 100px;
+            border: 2px solid var(--ink);
+            border-radius: var(--radius);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--surface-3);
+            font-size: 30px;
+            font-weight: 700;
+            color: var(--ink);
+            letter-spacing: -0.04em;
+        }
+
+        .avatar-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .avatar-online {
+            position: absolute;
+            bottom: 4px;
+            right: 4px;
+            width: 10px;
+            height: 10px;
+            background: var(--emerald);
+            border: 2px solid var(--surface-2);
+            border-radius: 50%;
+        }
+
+        .profile-name-center {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--ink);
+            letter-spacing: -0.02em;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .verified-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: var(--emerald-pale);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            color: var(--emerald);
+            padding: 2px 8px;
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            border-radius: 20px;
+        }
+
+        .profile-right {
+            flex: 1;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 14px;
+        }
+
+        .profile-email-row {
+            font-size: 12px;
+            color: var(--gray);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 12px;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+        }
+
+        .profile-email-row i {
+            color: var(--accent);
+            font-size: 10px;
+            flex-shrink: 0;
+        }
+
+        .profile-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .profile-actions .btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+        /* ── STORAGE CARD ── */
+        .storage-hero {
+            display: flex;
+            align-items: baseline;
+            gap: 4px;
+            margin: 10px 0 2px;
+        }
+
+        .storage-hero-val {
+            font-size: 48px;
+            font-weight: 300;
+            color: var(--ink);
+            letter-spacing: -0.05em;
+            line-height: 1;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .storage-hero-pct {
+            font-size: 22px;
+            font-weight: 300;
+            color: var(--ink);
+        }
+
+        .storage-hero-unit {
+            font-size: 12px;
+            color: var(--gray);
+            margin-left: 4px;
+            align-self: flex-end;
+            padding-bottom: 4px;
+        }
+
+        .storage-bar-wrap {
+            margin: 10px 0 6px;
+        }
+
+        .storage-bar-track {
+            width: 100%;
+            height: 6px;
+            background: var(--surface-3);
+            overflow: hidden;
+            display: flex;
+            border-radius: 20px;
+        }
+
+        .seg {
+            height: 100%;
+            transition: width 1.6s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 0%;
+        }
+
+        .seg-docs {
+            background: var(--accent);
+            border-radius: 20px 0 0 20px;
+        }
+
+        .seg-img {
+            background: #a5b4fc;
+        }
+
+        .seg-other {
+            background: #c7d2fe;
+            border-radius: 0 20px 20px 0;
+        }
+
+        .storage-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--gray);
+            margin-top: 6px;
+        }
+
+        .storage-meta strong {
+            color: var(--ink);
+            font-weight: 600;
+        }
+
+        .storage-footer-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 14px;
+            margin-top: 14px;
+            border-top: 1px solid var(--border);
+        }
+
+        .storage-legend {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .leg-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 10px;
+            color: var(--gray);
+        }
+
+        .leg-dot {
+            width: 8px;
+            height: 8px;
+            flex-shrink: 0;
+            border-radius: 50%;
+        }
+
+        /* ── STATS CARD ── */
+        .stat-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .stat-row:last-child {
+            border-bottom: none;
+        }
+
+        .stat-icon {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            flex-shrink: 0;
+            border: 1px solid var(--border);
+            background: var(--surface-2);
+            color: var(--gray);
+            border-radius: var(--radius-sm);
+        }
+
+        .stat-icon.pdf {
+            border-color: rgba(220, 38, 38, 0.2);
+            background: var(--danger-pale);
+            color: var(--danger);
+        }
+
+        .stat-icon.img {
+            border-color: var(--accent-border);
+            background: var(--accent-pale);
+            color: var(--accent);
+        }
+
+        .stat-icon.office {
+            border-color: rgba(8, 145, 178, 0.2);
+            background: var(--teal-pale);
+            color: var(--teal);
+        }
+
+        .stat-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--ink);
+        }
+
+        .stat-bar-wrap {
+            margin-top: 4px;
+            height: 4px;
+            background: var(--surface-3);
+            overflow: hidden;
+            border-radius: 20px;
+        }
+
+        .stat-bar {
+            height: 100%;
+            transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 0%;
+            border-radius: 20px;
+        }
+
+        .stat-bar.pdf-bar {
+            background: var(--danger);
+        }
+
+        .stat-bar.img-bar {
+            background: var(--accent);
+        }
+
+        .stat-bar.office-bar {
+            background: var(--teal);
+        }
+
+        .stat-count {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--ink);
+            letter-spacing: -0.04em;
+            flex-shrink: 0;
+        }
+
+        .stats-total-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            padding: 4px 10px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--gray);
+            border-radius: 20px;
+        }
+
+        .stats-total-pill .num {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--ink);
+            letter-spacing: -0.03em;
+        }
+
+        /* ── UPLOAD CARD ── */
+        .upload-zone {
+            border: 1.5px dashed var(--border-strong);
+            padding: 20px 14px;
+            text-align: center;
+            cursor: pointer;
+            background: var(--surface-2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: border-color 0.25s ease, background 0.25s ease;
+            flex: 1;
+            border-radius: var(--radius);
+        }
+
+        .upload-zone:hover {
+            border-color: var(--accent);
+            background: var(--accent-pale);
+        }
+
+        .upload-icon-box {
+            width: 36px;
+            height: 36px;
+            border: 1px solid var(--border-strong);
+            background: var(--surface);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+            font-size: 14px;
+            border-radius: var(--radius-sm);
+        }
+
+        .upload-heading {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--ink);
+        }
+
+        .upload-sub {
+            font-size: 11px;
+            color: var(--gray-light);
+        }
+
+        .file-chips {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 4px;
+        }
+
+        .file-chip {
+            font-size: 9px;
+            font-weight: 600;
+            padding: 2px 7px;
+            border: 1px solid var(--border);
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            border-radius: 20px;
+        }
+
+        /* ── ACTIVITY ── */
+        .activity-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--border);
+            animation: slideIn 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-12px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .activity-icon {
+            width: 30px;
+            height: 30px;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            flex-shrink: 0;
+            background: var(--surface-2);
+            color: var(--gray);
+            border-radius: var(--radius-sm);
+        }
+
+        .activity-icon.upload {
+            border-color: rgba(16, 185, 129, 0.2);
+            background: var(--emerald-pale);
+            color: var(--emerald);
+        }
+
+        .activity-icon.delete {
+            border-color: var(--danger-border);
+            background: var(--danger-pale);
+            color: var(--danger);
+        }
+
+        .activity-icon.login {
+            border-color: var(--accent-border);
+            background: var(--accent-pale);
+            color: var(--accent);
+        }
+
+        .activity-icon.profile {
+            border-color: rgba(245, 158, 11, 0.2);
+            background: var(--amber-pale);
+            color: var(--amber);
+        }
+
+        .activity-icon.password {
+            border-color: rgba(8, 145, 178, 0.2);
+            background: var(--teal-pale);
+            color: var(--teal);
+        }
+
+        .activity-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .activity-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--ink);
+        }
+
+        .activity-badge {
+            display: inline-flex;
+            font-size: 8px;
+            padding: 1px 6px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            background: var(--surface-3);
+            color: var(--gray);
+            border-radius: 20px;
+            margin-left: 6px;
+        }
+
+        .activity-badge.upload {
+            background: var(--emerald-pale);
+            color: var(--emerald);
+        }
+
+        .activity-badge.delete {
+            background: var(--danger-pale);
+            color: var(--danger);
+        }
+
+        .activity-meta {
+            font-size: 10px;
+            color: var(--gray-light);
+            margin-top: 3px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .recent-activity-list {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .recent-activity-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .recent-activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .recent-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .recent-dot.upload {
+            background: var(--emerald);
+        }
+
+        .recent-dot.delete {
+            background: var(--danger);
+        }
+
+        .recent-dot.login {
+            background: var(--accent);
+        }
+
+        .recent-dot.profile {
+            background: var(--amber);
+        }
+
+        .recent-dot.password {
+            background: var(--teal);
+        }
+
+        .recent-text {
+            flex: 1;
+            font-size: 12px;
+            color: var(--ink);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .recent-time {
+            font-size: 10px;
+            color: var(--gray-light);
+            white-space: nowrap;
+        }
+
+        /* ── FILES PAGE ── */
+        .file-type-tabs {
+            display: flex;
+            gap: 4px;
+            overflow: hidden;
+        }
+
+        .type-tab-btn {
+            padding: 7px 14px;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--gray);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-family: inherit;
+            white-space: nowrap;
+            transition: background 0.2s, color 0.2s;
+            border-radius: var(--radius-sm);
+        }
+
+        .type-tab-btn:hover {
+            color: var(--ink);
+            background: var(--surface-3);
+        }
+
+        .type-tab-btn.active {
+            background: var(--ink);
+            color: var(--bg);
+            font-weight: 600;
+            border-color: var(--ink);
+        }
+
+        [data-theme="dark"] .type-tab-btn.active {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .type-tab-badge {
+            font-size: 9px;
+            padding: 1px 5px;
+            font-weight: 600;
+            background: rgba(0, 0, 0, 0.1);
+            color: inherit;
+            border-radius: 20px;
+        }
+
+        .type-tab-btn.active .type-tab-badge {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .search-container {
+            position: relative;
+            flex: 1;
+            min-width: 180px;
+            max-width: 300px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-light);
+            font-size: 11px;
+            pointer-events: none;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 7px 12px 7px 34px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            background: var(--surface);
+            color: var(--ink);
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        /* ── FILE CARDS ── */
+        .files-grid-icons {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
+            gap: 10px;
+            overflow: visible;
+        }
+
+        .file-card {
+            background: var(--surface);
+            cursor: default;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            transition: background 0.2s;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            will-change: auto;
+            box-shadow: var(--shadow);
+        }
+
+        .file-card:hover {
+            background: var(--surface-2);
+            z-index: 10;
+        }
+
+        .file-card-thumb {
+            height: 84px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .file-card-thumb.type-pdf {
+            background: var(--danger-pale);
+        }
+
+        .file-card-thumb.type-image {
+            background: var(--accent-pale);
+        }
+
+        .file-card-thumb.type-word {
+            background: #eff6ff;
+        }
+
+        .file-card-thumb.type-excel {
+            background: #f0fdf4;
+        }
+
+        .file-card-thumb.type-pptx {
+            background: #fff7ed;
+        }
+
+        .file-card-thumb.type-generic {
+            background: var(--surface-2);
+        }
+
+        [data-theme="dark"] .file-card-thumb.type-pdf {
+            background: var(--danger-pale);
+        }
+
+        [data-theme="dark"] .file-card-thumb.type-image {
+            background: var(--accent-pale);
+        }
+
+        [data-theme="dark"] .file-card-thumb.type-word {
+            background: #0d1829;
+        }
+
+        [data-theme="dark"] .file-card-thumb.type-excel {
+            background: #0a1f10;
+        }
+
+        [data-theme="dark"] .file-card-thumb.type-pptx {
+            background: #1a1000;
+        }
+
+        [data-theme="dark"] .file-card-thumb.type-generic {
+            background: var(--surface-2);
+        }
+
+        .file-card-thumb-icon {
+            font-size: 30px;
+            filter: none;
+        }
+
+        .file-card-menu-btn {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 22px;
+            height: 22px;
+            background: var(--surface);
+            border: 1px solid var(--border-strong);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 10px;
+            color: var(--gray);
+            opacity: 0;
+            transition: opacity 0.2s, background 0.2s, transform 0.2s;
+            z-index: 5;
+            border-radius: var(--radius-sm);
+        }
+
+        .file-card:hover .file-card-menu-btn {
+            opacity: 1;
+        }
+
+        .file-card-menu-btn:hover {
+            background: var(--ink);
+            color: var(--bg);
+            border-color: var(--ink);
+            transform: scale(1.1);
+        }
+
+        .file-card-dropdown {
+            position: fixed;
+            width: 156px;
+            background: var(--surface);
+            border: 1px solid var(--border-strong);
+            box-shadow: var(--shadow-lg);
+            z-index: 99999;
+            overflow: hidden;
+            display: none;
+            flex-direction: column;
+            animation: dropIn 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+            border-radius: var(--radius-sm);
+        }
+
+        @keyframes dropIn {
+            from {
+                opacity: 0;
+                transform: translateY(-8px) scale(0.96);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .file-card-dropdown.open {
+            display: flex;
+        }
+
+        #floatingFileMenu {
+            display: none;
+        }
+
+        #floatingFileMenu.open {
+            display: flex !important;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            font-size: 12.5px;
+            font-weight: 500;
+            color: var(--gray);
+            cursor: pointer;
+            text-decoration: none;
+            border: none;
+            background: none;
+            font-family: inherit;
+            width: 100%;
+            transition: background 0.15s, color 0.15s, transform 0.1s;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-item:hover {
+            background: var(--surface-2);
+            color: var(--ink);
+            transform: translateX(3px);
+        }
+
+        .dropdown-item.danger:hover {
+            background: var(--danger-pale);
+            color: var(--danger);
+        }
+
+        .dropdown-item i {
+            width: 12px;
+            text-align: center;
+            font-size: 10px;
+        }
+
+        .file-card-info {
+            padding: 8px 10px 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            background: var(--surface);
+        }
+
+        .file-card:hover .file-card-info {
+            background: var(--surface-2);
+        }
+
+        .file-card-name {
+            font-size: 11.5px;
+            font-weight: 600;
+            color: var(--ink);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.3;
+        }
+
+        .file-card-ext {
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            padding: 1px 5px;
+            color: var(--gray);
+            background: var(--surface-3);
+            border-radius: 20px;
+            display: inline-block;
+        }
+
+        .file-card-ext.ext-pdf {
+            color: var(--danger);
+            background: var(--danger-pale);
+        }
+
+        .file-card-ext.ext-image {
+            color: var(--accent);
+            background: var(--accent-pale);
+        }
+
+        .file-card-ext.ext-word {
+            color: #1d4ed8;
+            background: #eff6ff;
+        }
+
+        .file-card-ext.ext-excel {
+            color: #15803d;
+            background: #f0fdf4;
+        }
+
+        .file-card-ext.ext-pptx {
+            color: #dc2626;
+            background: #fff7ed;
+        }
+
+        [data-theme="dark"] .file-card-ext.ext-pdf {
+            color: var(--danger);
+            background: var(--danger-pale);
+        }
+
+        [data-theme="dark"] .file-card-ext.ext-image {
+            color: var(--accent);
+            background: var(--accent-pale);
+        }
+
+        [data-theme="dark"] .file-card-ext.ext-word {
+            color: #60a5fa;
+            background: #0d1829;
+        }
+
+        [data-theme="dark"] .file-card-ext.ext-excel {
+            color: #4ade80;
+            background: #0a1f10;
+        }
+
+        [data-theme="dark"] .file-card-ext.ext-pptx {
+            color: #fb923c;
+            background: #1a1000;
+        }
+
+        .empty-state {
+            grid-column: 1/-1;
+            text-align: center;
+            padding: 48px 20px;
+            color: var(--gray);
+            background: var(--surface);
+            border-radius: var(--radius);
+        }
+
+        .empty-icon {
+            width: 44px;
+            height: 44px;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: var(--gray-light);
+            margin: 0 auto 12px;
+            background: var(--surface-2);
+            border-radius: var(--radius-sm);
+        }
+
+        .empty-state p {
+            font-size: 13px;
+            margin-bottom: 12px;
+        }
+
+        .empty-state-sub {
+            font-size: 11px;
+            color: var(--gray-light);
+        }
+
+        /* ── SECURITY PAGE ── */
+        .sec-overview-cols {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .sec-stat-col {
+            padding: 20px 22px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .sec-stat-label {
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--gray-light);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 6px;
+        }
+
+        .sec-stat-label i {
+            font-size: 8px;
+            color: var(--emerald);
+        }
+
+        .sec-stat-val {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--ink);
+            letter-spacing: -0.03em;
+        }
+
+        .sec-stat-sub {
+            font-size: 11px;
+            color: var(--gray);
+            margin-top: 2px;
+        }
+
+        .sec-main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.1fr;
+            gap: 16px;
+        }
+
+        .sec-left {
+            display: flex;
+            flex-direction: column;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .sec-right-panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .sec-panel {
+            padding: 22px;
+        }
+
+        .sec-panel-head {
+            padding: 16px 22px;
+            background: var(--surface-2);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .sec-panel-head-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sec-icon-box {
+            width: 32px;
+            height: 32px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: var(--gray);
+            border-radius: var(--radius-sm);
+        }
+
+        .sec-icon-box.amber-box {
+            border-color: rgba(245, 158, 11, 0.25);
+            background: var(--amber-pale);
+            color: var(--amber);
+        }
+
+        .sec-icon-box.accent-box {
+            border-color: var(--accent-border);
+            background: var(--accent-pale);
+            color: var(--accent);
+        }
+
+        .sec-panel-label {
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--gray-light);
+        }
+
+        .sec-panel-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--ink);
+            letter-spacing: -0.03em;
+        }
+
+        .sec-active-badge {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--accent);
+            padding: 3px 9px;
+            background: var(--accent-pale);
+            border: 1px solid var(--accent-border);
+            border-radius: 20px;
+        }
+
+        .sec-active-badge .dot {
+            width: 4px;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 50%;
+        }
+
+        .pw-visual-block {
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            padding: 18px;
+            margin-bottom: 14px;
+            border-radius: var(--radius-sm);
+        }
+
+        .pw-visual-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .pw-label {
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--gray-light);
+            margin-bottom: 6px;
+        }
+
+        .pw-mask {
+            font-family: 'Space Grotesk', monospace;
+            font-size: 20px;
+            letter-spacing: 4px;
+            color: var(--ink);
+            line-height: 1;
+            transition: all 0.3s ease;
+        }
+
+        .pw-reveal-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--surface);
+            border: 1px solid var(--border-strong);
+            padding: 6px 12px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--gray);
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+            flex-shrink: 0;
+            border-radius: var(--radius-sm);
+        }
+
+        .pw-reveal-btn:hover {
+            border-color: var(--ink);
+            color: var(--ink);
+        }
+
+        .pw-reveal-btn i {
+            font-size: 10px;
+        }
+
+        .pw-footer-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding-top: 12px;
+            margin-top: 12px;
+            border-top: 1px solid var(--border);
+        }
+
+        .pw-accent-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--accent);
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .pw-meta-text {
+            font-size: 11px;
+            color: var(--gray-light);
+            flex: 1;
+        }
+
+        .pw-enc-badge {
+            font-size: 9px;
+            font-weight: 600;
+            padding: 2px 8px;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            background: var(--accent-pale);
+            color: var(--accent);
+            border: 1px solid var(--accent-border);
+            border-radius: 20px;
+        }
+
+        .sec-note {
+            font-size: 11px;
+            color: var(--gray);
+            padding: 9px 12px;
+            background: var(--accent-pale);
+            border: 1px solid var(--accent-border);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            line-height: 1.5;
+            border-radius: var(--radius-sm);
+        }
+
+        .sec-note i {
+            font-size: 10px;
+            color: var(--accent);
+            flex-shrink: 0;
+        }
+
+        .danger-strip {
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            padding: 14px 22px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .danger-strip-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
+        }
+
+        .danger-icon-box {
+            width: 28px;
+            height: 28px;
+            border: 1px solid var(--danger-border);
+            background: var(--danger-pale);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            color: var(--danger);
+            flex-shrink: 0;
+            border-radius: var(--radius-sm);
+        }
+
+        .danger-text-title {
+            font-size: 12px;
+            font-weight: 650;
+            color: var(--ink);
+        }
+
+        .danger-text-sub {
+            font-size: 10.5px;
+            color: var(--gray);
+        }
+
+        /* Security form */
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        label {
+            font-size: 9px;
+            font-weight: 600;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        input[type="password"],
+        input[type="text"] {
+            width: 100%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--ink);
+            font-size: 13px;
+            outline: none;
+            font-family: 'Space Grotesk', sans-serif;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            border-radius: var(--radius-sm);
+        }
+
+        input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .input-wrap {
+            position: relative;
+        }
+
+        .eye-btn {
+            position: absolute;
+            right: 9px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--gray-light);
+            font-size: 11px;
+            padding: 4px;
+            transition: color 0.15s;
+        }
+
+        .eye-btn:hover {
+            color: var(--ink);
+        }
+
+        .strength-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding: 10px 12px;
+            background: var(--accent-pale);
+            border: 1px solid var(--accent-border);
+            border-radius: var(--radius-sm);
+        }
+
+        .strength-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .strength-bars {
+            display: flex;
+            gap: 3px;
+            flex: 1;
+        }
+
+        .s-bar {
+            flex: 1;
+            height: 4px;
+            background: var(--border);
+            transition: background 0.3s ease;
+            border-radius: 20px;
+        }
+
+        .s-bar.filled {
+            background: var(--accent);
+        }
+
+        .s-bar.filled.warn {
+            background: var(--amber);
+        }
+
+        .s-bar.filled.danger {
+            background: var(--danger);
+        }
+
+        .strength-label {
+            font-size: 10.5px;
+            color: var(--gray);
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .strength-hint {
+            font-size: 9.5px;
+            color: var(--gray-light);
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-top: 4px;
+        }
+
+        .status-message {
+            margin-top: 8px;
+            padding: 7px 10px;
+            display: none;
+            font-size: 12px;
+            font-weight: 500;
+            border-radius: var(--radius-sm);
+        }
+
+        .status-message.error {
+            display: block;
+            background: var(--danger-pale);
+            color: var(--danger);
+            border: 1px solid var(--danger-border);
+        }
+
+        .status-message.success {
+            display: block;
+            background: var(--emerald-pale);
+            color: var(--emerald);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .status-message.info {
+            display: block;
+            background: var(--surface-2);
+            color: var(--gray);
+        }
+
+        /* ── MODALS ── */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 15, 0.5);
+            backdrop-filter: blur(8px);
+            align-items: center;
+            justify-content: center;
+            animation: modalFade 0.2s ease;
+        }
+
+        @keyframes modalFade {
+            from {
+                opacity: 0
+            }
+
+            to {
+                opacity: 1
+            }
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--surface);
+            border: 1px solid var(--border-strong);
+            width: 100%;
+            max-width: 460px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+            animation: modalSlide 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+            border-radius: var(--radius);
+        }
+
+        @keyframes modalSlide {
+            from {
+                transform: translateY(16px) scale(0.97);
+                opacity: 0
+            }
+
+            to {
+                transform: translateY(0) scale(1);
+                opacity: 1
+            }
+        }
+
+        .modal-content.danger-modal {}
+
+        .modal-header {
+            padding: 18px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            flex-shrink: 0;
+            border: 1px solid var(--border);
+        }
+
+        .modal-icon-primary {
+            background: var(--accent-pale);
+            color: var(--accent);
+            border-color: var(--accent-border);
+        }
+
+        .modal-icon-danger {
+            background: var(--danger-pale);
+            color: var(--danger);
+            border-color: var(--danger-border);
+        }
+
+        .modal-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--ink);
+            letter-spacing: -0.03em;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-footer {
+            padding: 14px 20px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .file-input-label {
+            display: block;
+            padding: 20px;
+            border: 1.5px dashed var(--border-strong);
+            text-align: center;
+            cursor: pointer;
+            background: var(--surface-2);
+            transition: border-color 0.2s, background 0.2s, transform 0.2s;
+            border-radius: var(--radius);
+        }
+
+        .file-input-label:hover {
+            border-color: var(--accent);
+            background: var(--accent-pale);
+        }
+
+        .file-input-label.drag-over {
+            border-color: var(--accent);
+            background: var(--accent-pale);
+        }
+
+        .file-input-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .file-input-icon {
+            font-size: 20px;
+            color: var(--accent);
+        }
+
+        .file-input-text {
+            font-weight: 600;
+            color: var(--ink);
+            font-size: 13px;
+        }
+
+        .file-input-subtext {
+            font-size: 11px;
+            color: var(--gray-light);
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-selected {
+            display: none;
+            margin-top: 8px;
+            padding: 7px 10px;
+            background: var(--accent-pale);
+            color: var(--accent);
+            font-size: 12px;
+            text-align: center;
+            border: 1px solid var(--accent-border);
+            font-weight: 500;
+            border-radius: var(--radius-sm);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        /* ── DELETE ANIMATION ── */
+        .delete-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--surface);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+
+        .delete-animation.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .delete-anim-icon {
+            width: 56px;
+            height: 56px;
+            background: var(--danger-pale);
+            border: 1px solid var(--danger-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--danger);
+            font-size: 20px;
+            margin-bottom: 16px;
+            border-radius: var(--radius);
+        }
+
+        .delete-anim-text {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--ink);
+            letter-spacing: -0.04em;
+            margin-bottom: 6px;
+        }
+
+        .delete-anim-sub {
+            color: var(--gray);
+            text-align: center;
+            max-width: 300px;
+            font-size: 12px;
+        }
+
+        /* ── LOADER ── */
+        .loader-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.4s ease;
+        }
+
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--border);
+            border-top-color: var(--ink);
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg)
+            }
+
+            100% {
+                transform: rotate(360deg)
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* ── HAMBURGER ── */
+        .hamburger-btn {
+            display: none;
+            position: fixed;
+            top: 16px;
+            left: 16px;
+            z-index: 200;
+            width: 36px;
+            height: 36px;
+            background: var(--surface);
+            border: 1px solid var(--border-strong);
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--ink);
+            font-size: 13px;
+            box-shadow: var(--shadow);
+            transition: background 0.15s, transform 0.2s;
+            border-radius: var(--radius-sm);
+        }
+
+        .hamburger-btn:hover {
+            background: var(--surface-2);
+            transform: scale(1.05);
+        }
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 10, 15, 0.4);
+            z-index: 150;
+            backdrop-filter: blur(4px);
+            animation: fadeIn 0.25s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0
+            }
+
+            to {
+                opacity: 1
+            }
+        }
+
+        .sidebar-overlay.active {
+            display: block;
+        }
+
+        /* files toolbar */
+        .files-toolbar {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+            padding: 12px;
+            background: var(--surface-2);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .files-card-wrap {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        /* files grid inner padding */
+        #allFilesGrid,
+        #pdfFilesGrid,
+        #imageFilesGrid,
+        #officeFilesGrid {
+            padding: 14px !important;
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 1200px) {
+            .main {
+                padding: 20px 20px 44px;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .grid-3 {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .sec-overview-cols {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .sec-main-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .sec-main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .sec-overview-cols {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .grid-3 {
+                grid-template-columns: 1fr;
+            }
+
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .grid-2-asymm {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hamburger-btn {
+                display: flex;
+            }
+
+            .collapse-btn {
+                display: none;
+            }
+
+            .sidebar {
+                left: -300px;
+                top: 0;
+                height: 100vh;
+                border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+                width: var(--sidebar-width) !important;
+                min-width: var(--sidebar-width) !important;
+                transition: left 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+                z-index: 160;
+            }
+
+            .sidebar.mobile-open {
+                left: 0;
+            }
+
+            .main-wrapper {
+                margin-left: 0 !important;
+                padding: 0;
+            }
+
+            .main {
+                padding: 68px 16px 40px !important;
+            }
+
+            .grid-3,
+            .grid-2,
+            .grid-2-asymm {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-card {
+                flex-direction: column;
+            }
+
+            .profile-left {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .welcome-heading {
+                font-size: 22px;
+            }
+
+            .sec-overview-cols {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .sec-main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .toast {
+                bottom: 12px;
+                right: 12px;
+                left: 12px;
+                min-width: unset;
+                width: calc(100% - 24px);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .main {
+                padding: 68px 12px 36px !important;
+            }
+
+            .sec-overview-cols {
+                grid-template-columns: 1fr;
+            }
+
+            .files-grid-icons {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+        }
+
+        @media (max-width: 480px) {
+            .files-grid-icons {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .welcome-right {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="loader-wrapper" id="loader">
+        <div class="spinner"></div>
+    </div>
+
+    <div class="delete-animation" id="deleteAnimation">
+        <div class="delete-anim-icon"><i class="fas fa-trash-alt"></i></div>
+        <div class="delete-anim-text">Deleting Account</div>
+        <div class="delete-anim-sub">Your account and all associated data are being permanently removed.</div>
+    </div>
+
+    <div class="layout" id="layout">
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Open menu">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">Uni<span>Space</span></div>
+                <button class="collapse-btn" id="collapseSidebar"><i class="fas fa-chevron-left"></i></button>
+            </div>
+
+            <div class="sidebar-user-strip">
+                <div class="sidebar-user-avatar">
+                    <%= typeof getInitials==='function' ? getInitials(user.name) : user.name.charAt(0).toUpperCase() %>
+                </div>
+                <div class="sidebar-user-info">
+                    <div class="sidebar-user-name">
+                        <%= user.name %>
+                    </div>
+                    <div class="sidebar-user-email">
+                        <%= user.email %>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nav-section-label">Main</div>
+
+            <button class="nav-item active" data-tab="dashboard">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7" rx="1" />
+                    <rect x="14" y="3" width="7" height="7" rx="1" />
+                    <rect x="3" y="14" width="7" height="7" rx="1" />
+                    <rect x="14" y="14" width="7" height="7" rx="1" />
+                </svg>
+                <span class="nav-label">Overview</span>
+            </button>
+
+            <button class="nav-item" data-tab="files">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                    <polyline points="14 2 14 8 20 8" />
+                </svg>
+                <span class="nav-label">My Files</span>
+                <span class="nav-badge" id="totalFilesCountSidebar">
+                    <%= (user.pdfs ? user.pdfs.length : 0) + (user.images ? user.images.length : 0) + (user.documents ?
+                        user.documents.length : 0) %>
+                </span>
+            </button>
+
+            <button class="nav-item" data-tab="activity">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                </svg>
+                <span class="nav-label">Activity</span>
+                <span class="nav-badge" id="recentActivityBadge">new</span>
+            </button>
+
+            <div class="nav-divider"></div>
+            <div class="nav-section-label">Account</div>
+
+            <button class="nav-item" data-tab="security">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="11" width="18" height="11" rx="2" />
+                    <path d="M7 11V7a5 5 0 0110 0v4" />
+                </svg>
+                <span class="nav-label">Security</span>
+            </button>
+
+            <div class="sidebar-footer">
+                <button class="dark-toggle" id="darkModeToggle">
+                    <span class="toggle-label">
+                        <svg class="toggle-moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
+                        </svg>
+                        <span class="toggle-text">Dark mode</span>
+                    </span>
+                    <div class="toggle-switch"></div>
+                </button>
+                <a href="/logout" class="sidebar-signout" title="Sign Out">
+                    <svg class="signout-icon nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
+                        <polyline points="16 17 21 12 16 7" />
+                        <line x1="21" y1="12" x2="9" y2="12" />
+                    </svg>
+                    <span class="signout-label">Sign Out</span>
+                </a>
+            </div>
+        </aside>
+
+        <div class="main-wrapper">
+            <main class="main">
+
+                <!-- ════════════ DASHBOARD TAB ════════════ -->
+                <div class="tab-content active" id="dashboardTab">
+
+                    <!-- Welcome banner -->
+                    <div class="welcome-card">
+                        <div class="welcome-left">
+                            <div class="welcome-eyebrow">
+                                <span class="live-dot"></span>
+                                <span id="welcomeDay"></span>
+                            </div>
+                            <div class="welcome-heading" id="welcomeHeading">Welcome back</div>
+                            <div class="welcome-sub">All systems secure — nothing unusual detected.</div>
+                        </div>
+                        <div class="welcome-right">
+                            <button class="btn btn-ink" onclick="ModalManager.open('unifiedUploadModal')">
+                                <i class="fas fa-cloud-upload-alt"></i> Upload File
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Row 1: Profile + Storage + Stats -->
+                    <div class="grid-3">
+                        <!-- Profile Card -->
+                        <div class="card profile-card" style="padding:0;">
+                            <div class="profile-left">
+                                <div class="profile-left-inner">
+                                    <div class="avatar-wrap" id="userAvatar">
+                                        <% if(user.profilePicture && user.profilePicture.url) { %>
+                                            <img src="<%= user.profilePicture.url %>?v=<%= Date.now() %>" alt="Profile">
+                                            <% } else { %>
+                                                <%= getInitials(user.name) %>
+                                                    <% } %>
+                                                        <div class="avatar-online"></div>
+                                    </div>
+                                    <div class="profile-name-center" id="userNameDisplay">
+                                        <%= user.name %>
+                                    </div>
+                                    <div class="verified-tag"><i class="fas fa-check"></i> Verified</div>
+                                </div>
+                            </div>
+                            <div class="profile-right">
+                                <div>
+                                    <div class="card-label">Your Account</div>
+                                    <div class="card-title" id="userNameHidden">
+                                        <%= user.name %>
+                                    </div>
+                                    <div
+                                        style="font-size:10px; color:var(--gray-light); text-transform:uppercase; letter-spacing:0.1em; margin-top:2px;">
+                                        UniSpace Member</div>
+                                </div>
+                                <div class="profile-email-row">
+                                    <i class="fas fa-envelope"></i>
+                                    <span>
+                                        <%= user.email || 'Secure Vault User' %>
+                                    </span>
+                                </div>
+                                <div class="profile-actions">
+                                    <button class="btn btn-edit" onclick="ModalManager.open('profileModal')"><i
+                                            class="fas fa-user-edit"></i> Edit Profile</button>
+                                    <a href="/logout" class="btn btn-signout"><i class="fas fa-sign-out-alt"></i> Sign
+                                        Out</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Storage Card -->
+                        <div class="card">
+                            <div class="card-label">Storage</div>
+                            <div class="card-title">Space Used</div>
+                            <div class="storage-hero">
+                                <span class="storage-hero-val"><span id="storageUsedValue">0</span><span
+                                        class="storage-hero-pct">%</span></span>
+                                <span class="storage-hero-unit">used</span>
+                            </div>
+                            <div class="storage-bar-wrap">
+                                <div class="storage-bar-track">
+                                    <div class="seg seg-docs" id="segDocs"></div>
+                                    <div class="seg seg-img" id="segImg"></div>
+                                    <div class="seg seg-other" id="segOther"></div>
+                                </div>
+                                <div class="storage-meta" style="justify-content:space-between;">
+                                    <span><strong><span id="storagePercentage">0%</span></strong> used</span>
+                                    <span id="storageFreeMB" style="text-align:right;">100.00 MB free</span>
+                                </div>
+                            </div>
+                            <div class="storage-footer-bar">
+                                <div class="storage-legend">
+                                    <div class="leg-item">
+                                        <div class="leg-dot" style="background:var(--accent);"></div>Docs
+                                    </div>
+                                    <div class="leg-item">
+                                        <div class="leg-dot" style="background:#a5b4fc;"></div>Images
+                                    </div>
+                                    <div class="leg-item">
+                                        <div class="leg-dot" style="background:#c7d2fe;"></div>Other
+                                    </div>
+                                </div>
+                                <button class="btn btn-ghost" style="font-size:11px;padding:5px 10px;"
+                                    onclick="document.querySelector('[data-tab=\'files\']').click()">Manage →</button>
+                            </div>
+                        </div>
+
+                        <!-- Stats Card -->
+                        <div class="card">
+                            <div
+                                style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+                                <div>
+                                    <div class="card-label">Statistics</div>
+                                    <div class="card-title">File Overview</div>
+                                </div>
+                                <div class="stats-total-pill">
+                                    <span class="num" id="totalFilesCount">
+                                        <%= (user.pdfs ? user.pdfs.length : 0) + (user.images ? user.images.length : 0)
+                                            + (user.documents ? user.documents.length : 0) %>
+                                    </span>
+                                    total
+                                </div>
+                            </div>
+                            <div class="stat-row">
+                                <div class="stat-icon pdf"><i class="fas fa-file-pdf"></i></div>
+                                <div class="stat-info">
+                                    <div class="stat-label">PDFs</div>
+                                    <div class="stat-bar-wrap">
+                                        <div class="stat-bar pdf-bar" id="pdfBar"></div>
+                                    </div>
+                                </div>
+                                <div class="stat-count" id="pdfCountCard">
+                                    <%= user.pdfs ? user.pdfs.length : 0 %>
+                                </div>
+                            </div>
+                            <div class="stat-row">
+                                <div class="stat-icon img"><i class="fas fa-file-image"></i></div>
+                                <div class="stat-info">
+                                    <div class="stat-label">Images</div>
+                                    <div class="stat-bar-wrap">
+                                        <div class="stat-bar img-bar" id="imgBar"></div>
+                                    </div>
+                                </div>
+                                <div class="stat-count" id="imageCountCard">
+                                    <%= user.images ? user.images.length : 0 %>
+                                </div>
+                            </div>
+                            <div class="stat-row">
+                                <div class="stat-icon office"><i class="fas fa-file-alt"></i></div>
+                                <div class="stat-info">
+                                    <div class="stat-label">Office</div>
+                                    <div class="stat-bar-wrap">
+                                        <div class="stat-bar office-bar" id="officeBar"></div>
+                                    </div>
+                                </div>
+                                <div class="stat-count" id="officeCountCard">
+                                    <%= user.documents ? user.documents.length : 0 %>
+                                </div>
+                            </div>
+                            <div style="margin-top:12px;">
+                                <button class="btn btn-browse" style="width:100%;justify-content:center;"
+                                    onclick="document.querySelector('[data-tab=\'files\']').click()">
+                                    <i class="fas fa-folder-open"></i> Browse All Files
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Row 2: Recent Activity + Upload -->
+                    <div class="grid-2">
+                        <!-- Recent Activity -->
+                        <div class="card">
+                            <div
+                                style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+                                <div>
+                                    <div class="card-label">Recent Activity</div>
+                                    <div class="card-title" style="font-size:13px;">Latest actions</div>
+                                </div>
+                                <button class="btn btn-ghost" style="font-size:11px;padding:5px 10px;"
+                                    onclick="document.querySelector('[data-tab=\'activity\']').click()">
+                                    View All <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+                            <div id="recentActivityList" class="recent-activity-list">
+                                <div style="padding:12px 0; color:var(--gray); text-align:center; font-size:12px;">
+                                    <i class="fas fa-circle-notch fa-spin"></i> Loading...
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Upload Card -->
+                        <div class="card" style="display:flex;flex-direction:column;gap:12px;">
+                            <div style="display:flex;align-items:center;justify-content:space-between;">
+                                <div>
+                                    <div class="card-label">Files</div>
+                                    <div class="card-title">Upload Files</div>
+                                </div>
+                                <div
+                                    style="width:28px;height:28px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:12px;border-radius:var(--radius-sm);">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                </div>
+                            </div>
+                            <div class="upload-zone" onclick="ModalManager.open('unifiedUploadModal')" style="flex:1;">
+                                <div class="upload-icon-box"><i class="fas fa-cloud-upload-alt"></i></div>
+                                <div class="upload-heading">Drop files or click to browse</div>
+                                <div class="upload-sub">PDF, DOCX, XLSX, PPTX, images — up to 100 MB</div>
+                                <button class="btn btn-primary" style="margin-top:4px;"
+                                    onclick="event.stopPropagation();ModalManager.open('unifiedUploadModal')">
+                                    <i class="fas fa-plus"></i> Choose Files
+                                </button>
+                                <div class="file-chips">
+                                    <span class="file-chip">PDF</span>
+                                    <span class="file-chip">DOCX</span>
+                                    <span class="file-chip">XLSX</span>
+                                    <span class="file-chip">PPTX</span>
+                                    <span class="file-chip">Images</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- ════════════ FILES TAB ════════════ -->
+                <div class="tab-content" id="filesTab">
+
+                    <div class="page-header">
+                        <div class="page-header-line">
+                            <div class="page-issue-tag">
+                                <span class="status-blink"></span>
+                                My Files
+                            </div>
+                            <div class="page-rule"></div>
+                            <button class="btn btn-primary" onclick="ModalManager.open('unifiedUploadModal')">
+                                <i class="fas fa-cloud-upload-alt"></i> Upload
+                            </button>
+                        </div>
+                        <div class="page-headline" style="font-size:32px;">Your <em>documents.</em></div>
+                        <div class="page-sub">All files, documents, images and office documents in one place.</div>
+                    </div>
+
+                    <div class="files-card-wrap">
+                        <div class="files-toolbar">
+                            <div class="file-type-tabs">
+                                <button class="type-tab-btn active" data-type="all">
+                                    All <span class="type-tab-badge" id="allCount">
+                                        <%= (user.pdfs ? user.pdfs.length : 0) + (user.images ? user.images.length : 0)
+                                            + (user.documents ? user.documents.length : 0) %>
+                                    </span>
+                                </button>
+                                <button class="type-tab-btn" data-type="pdf">
+                                    PDFs <span class="type-tab-badge" id="pdfCount">
+                                        <%= user.pdfs ? user.pdfs.length : 0 %>
+                                    </span>
+                                </button>
+                                <button class="type-tab-btn" data-type="images">
+                                    Images <span class="type-tab-badge" id="imageCount">
+                                        <%= user.images ? user.images.length : 0 %>
+                                    </span>
+                                </button>
+                                <button class="type-tab-btn" data-type="office">
+                                    Office <span class="type-tab-badge" id="officeCount">
+                                        <%= user.documents ? user.documents.length : 0 %>
+                                    </span>
+                                </button>
+                            </div>
+                            <div class="search-container">
+                                <i class="fas fa-search search-icon"></i>
+                                <input type="text" id="searchInput" class="search-input" placeholder="Search files...">
+                            </div>
+                        </div>
+
+                        <div id="allFilesGrid" class="files-grid files-grid-icons" style="padding:14px;">
+                            <% const allFiles=[]; if (user.pdfs && user.pdfs.length> 0) user.pdfs.forEach(pdf =>
+                                allFiles.push({...pdf, type:'pdf'}));
+                                if (user.images && user.images.length > 0) user.images.forEach(img =>
+                                allFiles.push({...img, type:'image'}));
+                                if (user.documents && user.documents.length > 0) user.documents.forEach(doc =>
+                                allFiles.push({...doc, type:'document'}));
+
+                                if (allFiles.length > 0) {
+                                allFiles.sort((a,b) => new Date(b.uploadDate) - new Date(a.uploadDate));
+                                allFiles.forEach(file => {
+                                let thumbClass='type-generic', extClass='', iconClass='fas fa-file', extLabel='FILE',
+                                viewHref='#', downloadHref='#';
+                                if (file.type === 'pdf') {
+                                thumbClass='type-pdf'; extClass='ext-pdf'; iconClass='fas fa-file-pdf'; extLabel='PDF';
+                                viewHref='/pdfs/'+file.filename; downloadHref='/pdfs/download/'+file.filename;
+                                } else if (file.type === 'image') {
+                                thumbClass='type-image'; extClass='ext-image'; iconClass='fas fa-file-image';
+                                extLabel = file.name.split('.').pop().toUpperCase();
+                                viewHref='/images/'+file.filename; downloadHref='/images/'+file.filename;
+                                } else if (file.type === 'document') {
+                                viewHref='/documents/'+file.filename; downloadHref='/documents/download/'+file.filename;
+                                if (file.docType === 'word') { thumbClass='type-word'; extClass='ext-word';
+                                iconClass='fas fa-file-word'; extLabel='DOCX'; }
+                                else if (file.docType === 'excel') { thumbClass='type-excel'; extClass='ext-excel';
+                                iconClass='fas fa-file-excel'; extLabel='XLSX'; }
+                                else if (file.docType === 'powerpoint') { thumbClass='type-pptx'; extClass='ext-pptx';
+                                iconClass='fas fa-file-powerpoint'; extLabel='PPTX'; }
+                                }
+                                let displayName = file.name;
+                                if (displayName.length > 18) displayName = displayName.substring(0,15)+'...';
+                                %>
+                                <div class="file-card" data-type="<%= file.type %>"
+                                    data-name="<%= file.name.toLowerCase() %>" data-filename="<%= file.filename %>"
+                                    data-filetype="<%= file.type %>" data-view="<%= viewHref %>"
+                                    data-download="<%= downloadHref %>" data-dlname="<%= file.name %>">
+                                    <div class="file-card-thumb <%= thumbClass %>">
+                                        <div class="file-card-thumb-icon"><i class="<%= iconClass %>"></i></div>
+                                        <button class="file-card-menu-btn" title="Options"
+                                            onclick="toggleFileMenu(event, this)">
+                                            <i class="fas fa-ellipsis-v"></i>
+                                        </button>
+                                    </div>
+                                    <div class="file-card-info">
+                                        <div class="file-card-name" title="<%= file.name %>">
+                                            <%= displayName %>
+                                        </div>
+                                        <span class="file-card-ext <%= extClass %>">
+                                            <%= extLabel %>
+                                        </span>
+                                    </div>
+                                </div>
+                                <% }); } else { %>
+                                    <div class="empty-state">
+                                        <div class="empty-icon"><i class="fas fa-folder-open"></i></div>
+                                        <p>No files yet.</p>
+                                        <div class="empty-state-sub">Upload your first file to get started.</div>
+                                        <button class="btn btn-primary" style="margin-top:12px;"
+                                            onclick="ModalManager.open('unifiedUploadModal')"><i
+                                                class="fas fa-cloud-upload-alt"></i> Upload File</button>
+                                    </div>
+                                    <% } %>
+                        </div>
+
+                        <div id="pdfFilesGrid" class="files-grid files-grid-icons" style="display:none;padding:14px;">
+                        </div>
+                        <div id="imageFilesGrid" class="files-grid files-grid-icons" style="display:none;padding:14px;">
+                        </div>
+                        <div id="officeFilesGrid" class="files-grid files-grid-icons"
+                            style="display:none;padding:14px;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ════════════ SECURITY TAB ════════════ -->
+                <div class="tab-content" id="securityTab">
+
+                    <div class="page-header">
+                        <div class="page-header-line">
+                            <div class="page-issue-tag"
+                                style="background:var(--emerald-pale);color:var(--emerald);border-color:rgba(16,185,129,0.2);">
+                                <span class="status-blink" style="background:var(--emerald);"></span>
+                                Account Secured
+                            </div>
+                            <div class="page-rule"></div>
+                        </div>
+                        <div class="page-headline" style="font-size:32px;">Security <em>settings.</em></div>
+                        <div class="page-sub">Manage your password and account security.</div>
+                    </div>
+
+                    <!-- Overview strip -->
+                    <div class="sec-overview-cols">
+                        <div class="sec-stat-col">
+                            <div class="sec-stat-label"><i class="fas fa-circle"></i> Status</div>
+                            <div class="sec-stat-val">Protected</div>
+                            <div class="sec-stat-sub">All systems secure</div>
+                        </div>
+                        <div class="sec-stat-col">
+                            <div class="sec-stat-label"><i class="fas fa-circle"></i> Password</div>
+                            <div class="sec-stat-val">Active</div>
+                            <div class="sec-stat-sub" id="overviewPasswordDate">
+                                <%= user.passwordChangedAt ? 'Changed ' + new
+                                    Date(user.passwordChangedAt).toLocaleDateString('en-US', { month:'short',
+                                    day:'numeric', year:'numeric' }) : 'Never changed' %>
+                            </div>
+                        </div>
+                        <div class="sec-stat-col">
+                            <div class="sec-stat-label"><i class="fas fa-circle"></i> Encryption</div>
+                            <div class="sec-stat-val">Enabled</div>
+                            <div class="sec-stat-sub">bcrypt hashed</div>
+                        </div>
+                    </div>
+
+                    <!-- Main grid -->
+                    <div class="sec-main-grid">
+                        <!-- Left col -->
+                        <div class="sec-left">
+                            <div class="sec-panel-head">
+                                <div class="sec-panel-head-left">
+                                    <div class="sec-icon-box amber-box"><i class="fas fa-key"></i></div>
+                                    <div>
+                                        <div class="sec-panel-label">Current</div>
+                                        <div class="sec-panel-title">Your Password</div>
+                                    </div>
+                                </div>
+                                <div class="sec-active-badge"><span class="dot"></span> Active</div>
+                            </div>
+
+                            <div class="sec-panel">
+                                <div class="pw-visual-block">
+                                    <div class="pw-visual-top">
+                                        <div>
+                                            <div class="pw-label">Password</div>
+                                            <div class="pw-mask" id="passwordText">••••••••</div>
+                                        </div>
+                                        <button class="pw-reveal-btn" id="passwordToggle" onclick="togglePassword()">
+                                            <i class="fas fa-eye"></i> Show
+                                        </button>
+                                    </div>
+                                    <div class="pw-footer-bar">
+                                        <div class="pw-accent-dot"></div>
+                                        <span class="pw-meta-text" id="passwordLastChanged">
+                                            <%= user.passwordChangedAt ? 'Last changed ' + new
+                                                Date(user.passwordChangedAt).toLocaleDateString('en-US', {
+                                                year:'numeric', month:'short', day:'numeric' }) : 'Never changed' %>
+                                        </span>
+                                        <span class="pw-enc-badge">Encrypted</span>
+                                    </div>
+                                </div>
+                                <div class="sec-note">
+                                    <i class="fas fa-shield-alt"></i>
+                                    Your password is encrypted and stored securely. Click Show to reveal it temporarily.
+                                </div>
+                            </div>
+
+                            <!-- Danger strip -->
+                            <div class="danger-strip" style="margin-top:auto;">
+                                <div class="danger-strip-left">
+                                    <div class="danger-icon-box"><i class="fas fa-trash-alt"></i></div>
+                                    <div>
+                                        <div class="danger-text-title">Delete Account</div>
+                                        <div class="danger-text-sub">Permanently removes all your data</div>
+                                    </div>
+                                </div>
+                                <button class="btn btn-danger"
+                                    style="font-size:11.5px;padding:0 12px;height:30px;white-space:nowrap;"
+                                    onclick="ModalManager.open('deleteModal')">
+                                    <i class="fas fa-trash-alt"></i> Delete
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Right col: change password form -->
+                        <div class="sec-right-panel">
+                            <div class="sec-panel-head">
+                                <div class="sec-panel-head-left">
+                                    <div class="sec-icon-box accent-box"><i class="fas fa-lock-open"></i></div>
+                                    <div>
+                                        <div class="sec-panel-label">Update</div>
+                                        <div class="sec-panel-title">Change Password</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="sec-panel" style="display:flex;flex-direction:column;gap:12px;">
+                                <div class="field">
+                                    <label>Current Password</label>
+                                    <div class="input-wrap">
+                                        <input type="password" id="currentPassword"
+                                            placeholder="Enter your current password">
+                                        <button type="button" class="eye-btn"
+                                            onclick="toggleFieldPassword('currentPassword', this)"><i
+                                                class="fas fa-eye"></i></button>
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <label>New Password</label>
+                                    <div class="input-wrap">
+                                        <input type="password" id="newPassword" placeholder="Min. 8 characters"
+                                            oninput="checkPasswordStrength(this.value)">
+                                        <button type="button" class="eye-btn"
+                                            onclick="toggleFieldPassword('newPassword', this)"><i
+                                                class="fas fa-eye"></i></button>
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <label>Confirm New Password</label>
+                                    <div class="input-wrap">
+                                        <input type="password" id="confirmPassword"
+                                            placeholder="Repeat your new password">
+                                        <button type="button" class="eye-btn"
+                                            onclick="toggleFieldPassword('confirmPassword', this)"><i
+                                                class="fas fa-eye"></i></button>
+                                    </div>
+                                </div>
+                                <div class="strength-wrap">
+                                    <div class="strength-row">
+                                        <div class="strength-bars">
+                                            <div class="s-bar" id="sb1"></div>
+                                            <div class="s-bar" id="sb2"></div>
+                                            <div class="s-bar" id="sb3"></div>
+                                            <div class="s-bar" id="sb4"></div>
+                                        </div>
+                                        <span class="strength-label" id="strengthLabel">No password</span>
+                                    </div>
+                                    <div class="strength-hint">Use 8+ characters with uppercase, numbers & symbols.
+                                    </div>
+                                </div>
+                                <div class="form-actions">
+                                    <button type="button" class="btn btn-ghost"
+                                        onclick="clearPasswordFields()">Clear</button>
+                                    <button type="button" class="btn btn-security" onclick="changePassword()"><i
+                                            class="fas fa-save"></i> Update Password</button>
+                                </div>
+                                <div id="passwordChangeStatus" class="status-message"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ════════════ ACTIVITY TAB ════════════ -->
+                <div class="tab-content" id="activityTab">
+
+                    <div class="page-header" style="margin-bottom:24px;">
+                        <div class="page-header-line">
+                            <div class="page-issue-tag">
+                                <span class="status-blink"></span>
+                                Activity Log
+                            </div>
+                            <div class="page-rule"></div>
+                            <div class="stats-total-pill">
+                                <i class="fas fa-history" style="font-size:10px;"></i>
+                                <span id="totalActivitiesCount">0</span> activities
+                            </div>
+                        </div>
+                        <div class="page-headline" style="font-size:32px;">Recent <em>activity.</em></div>
+                        <div class="page-sub">Track all your actions and file operations.</div>
+                    </div>
+
+                    <div class="files-card-wrap" style="padding:0;">
+                        <div id="activityTimeline" style="padding:0 24px;">
+                            <div style="padding:40px; text-align:center; color:var(--gray);">
+                                <div class="spinner" style="margin:0 auto;"></div>
+                                <p style="margin-top:12px;font-size:13px;">Loading activities...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- ════════════ MODALS ════════════ -->
+    <div id="unifiedUploadModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-icon modal-icon-primary"><i class="fas fa-cloud-upload-alt"></i></div>
+                <h3 class="modal-title">Upload File</h3>
+            </div>
+            <div class="modal-body">
+                <form id="unifiedUploadForm" enctype="multipart/form-data">
+                    <div class="file-input-wrapper">
+                        <label for="unifiedFile" class="file-input-label" id="unifiedFileLabel">
+                            <div class="file-input-content">
+                                <i class="fas fa-cloud-upload-alt file-input-icon"></i>
+                                <div class="file-input-text">Choose a file</div>
+                                <div class="file-input-subtext">Images, PDF, Word, Excel, or PowerPoint</div>
+                            </div>
+                        </label>
+                        <input type="file" id="unifiedFile" name="file"
+                            accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx" class="file-input" required>
+                        <div class="file-selected" id="unifiedFileSelected"><i class="fas fa-check-circle"></i> <span
+                                id="unifiedFileName"></span></div>
+                    </div>
+                    <div id="unifiedUploadStatus" class="status-message"></div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-ghost" onclick="ModalManager.close('unifiedUploadModal')">Cancel</button>
+                <button class="btn btn-primary" id="unifiedUploadBtn"
+                    onclick="document.getElementById('unifiedUploadForm').dispatchEvent(new Event('submit'))"
+                    disabled><i class="fas fa-upload"></i> Upload</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="changePasswordModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-icon modal-icon-primary"><i class="fas fa-key"></i></div>
+                <h3 class="modal-title">Change Password</h3>
+            </div>
+            <div class="modal-body">
+                <div style="display:flex;flex-direction:column;gap:14px;">
+                    <div class="field"><label>Current Password</label>
+                        <div class="input-wrap"><input type="password" id="modalCurrentPassword"
+                                placeholder="Enter current password"><button type="button" class="eye-btn"
+                                onclick="toggleFieldPassword('modalCurrentPassword', this)"><i
+                                    class="fas fa-eye"></i></button></div>
+                    </div>
+                    <div class="field"><label>New Password</label>
+                        <div class="input-wrap"><input type="password" id="modalNewPassword"
+                                placeholder="Min. 8 characters"><button type="button" class="eye-btn"
+                                onclick="toggleFieldPassword('modalNewPassword', this)"><i
+                                    class="fas fa-eye"></i></button></div>
+                    </div>
+                    <div class="field"><label>Confirm Password</label>
+                        <div class="input-wrap"><input type="password" id="modalConfirmPassword"
+                                placeholder="Repeat new password"><button type="button" class="eye-btn"
+                                onclick="toggleFieldPassword('modalConfirmPassword', this)"><i
+                                    class="fas fa-eye"></i></button></div>
+                    </div>
+                    <div id="changePasswordStatus" class="status-message"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-ghost" onclick="ModalManager.close('changePasswordModal')">Cancel</button>
+                <button class="btn btn-security" onclick="changePasswordModal()"><i class="fas fa-save"></i>
+                    Update</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="profileModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-icon modal-icon-primary"><i class="fas fa-user-edit"></i></div>
+                <h3 class="modal-title">Update Profile Picture</h3>
+            </div>
+            <div class="modal-body">
+                <div style="display:flex;flex-direction:column;align-items:center;gap:16px;">
+                    <div class="avatar-wrap" style="width:100px;height:100px;font-size:30px;" id="modalAvatar">
+                        <% if(user.profilePicture && user.profilePicture.url) { %>
+                            <img src="<%= user.profilePicture.url %>?v=<%= Date.now() %>" alt="Profile"
+                                style="width:100%;height:100%;object-fit:cover;">
+                            <% } else { %>
+                                <%= getInitials(user.name) %>
+                                    <% } %>
+                    </div>
+                    <form id="profileUploadForm" enctype="multipart/form-data" style="width:100%;">
+                        <div class="file-input-wrapper">
+                            <label for="profileFile" class="file-input-label" id="profileFileLabel">
+                                <div class="file-input-content">
+                                    <i class="fas fa-camera file-input-icon"></i>
+                                    <div class="file-input-text">Choose Profile Picture</div>
+                                    <div class="file-input-subtext">JPG, PNG up to 5MB</div>
+                                </div>
+                            </label>
+                            <input type="file" id="profileFile" name="profile" accept="image/*" class="file-input"
+                                required>
+                            <div class="file-selected" id="profileFileSelected"><i class="fas fa-check-circle"></i>
+                                <span id="profileFileName"></span>
+                            </div>
+                        </div>
+                        <div id="profileUploadStatus" class="status-message"></div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-ghost" onclick="ModalManager.close('profileModal')">Cancel</button>
+                <button class="btn btn-edit" id="uploadProfileBtn" onclick="uploadProfilePicture()" disabled><i
+                        class="fas fa-check"></i> Update</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="deleteModal" class="modal">
+        <div class="modal-content danger-modal">
+            <div class="modal-header">
+                <div class="modal-icon modal-icon-danger"><i class="fas fa-exclamation-triangle"></i></div>
+                <h3 class="modal-title">Delete Account?</h3>
+            </div>
+            <div class="modal-body">
+                <p style="color:var(--gray);line-height:1.7;font-size:13px;">
+                    Are you sure you want to delete your account? This action cannot be undone and all your data will be
+                    permanently lost.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-ghost" onclick="ModalManager.close('deleteModal')">Cancel</button>
+                <button class="btn btn-danger" onclick="confirmDeleteAccount()"><i class="fas fa-trash-alt"></i> Delete
+                    Account</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="deleteFileModal" class="modal">
+        <div class="modal-content danger-modal">
+            <div class="modal-header">
+                <div class="modal-icon modal-icon-danger"><i class="fas fa-trash-alt"></i></div>
+                <h3 class="modal-title">Delete File?</h3>
+            </div>
+            <div class="modal-body">
+                <p style="color:var(--gray);line-height:1.7;font-size:13px;">Are you sure you want to delete <strong
+                        id="fileToDeleteName" style="color:var(--ink);"></strong>? This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-ghost" onclick="ModalManager.close('deleteFileModal')">Cancel</button>
+                <button class="btn btn-danger" onclick="confirmDeleteFile()">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rename File Modal -->
+    <div id="renameFileModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-icon modal-icon-primary"><i class="fas fa-pencil-alt"></i></div>
+                <h3 class="modal-title">Rename File</h3>
+            </div>
+            <div class="modal-body">
+                <div style="display:flex;flex-direction:column;gap:16px;">
+                    <div class="field">
+                        <label>Current Name</label>
+                        <div style="padding:8px 12px; background:var(--surface-2); border:1px solid var(--border); border-radius:var(--radius-sm); font-size:13px; color:var(--ink);"
+                            id="currentFileName"></div>
+                    </div>
+                    <div class="field">
+                        <label>New Name</label>
+                        <div class="input-wrap">
+                            <input type="text" id="newFileName" placeholder="Enter new filename" autocomplete="off">
+                        </div>
+                    </div>
+                    <div id="renameFileStatus" class="status-message"></div>
+                    <div style="font-size:11px; color:var(--gray-light);">
+                        <i class="fas fa-info-circle"></i> The file extension will be preserved automatically.
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-ghost" onclick="ModalManager.close('renameFileModal')">Cancel</button>
+                <button class="btn btn-edit" onclick="confirmRenameFile()"><i class="fas fa-save"></i> Rename</button>
+            </div>
+        </div>
+    </div>
+
+    <script id="storageDataJSON" type="application/json">
+        <%- JSON.stringify({ pdfs: (user && user.pdfs) || [], images: (user && user.images) || [], documents: (user && user.documents) || [] }).replace(/</g, '\\u003c') %>
+    </script>
+
+    <script>
+        let passwordVisible = false;
+        let userPassword = '<%= user.pass %>';
+        let currentDeleteType = '';
+        let currentDeleteFilename = '';
+        let currentDeleteName = '';
+        let currentDeleteUserId = '<%= user._id %>';
+        // Rename state
+        let currentRenameType = '';
+        let currentRenameFilename = '';
+        let currentRenameName = '';
+        let currentRenameCard = null;
+        let currentRenameExt = '';
+
+        let storageData;
+        try {
+            storageData = JSON.parse(document.getElementById('storageDataJSON').textContent);
+            storageData.pdfs = (storageData.pdfs || []).map(p => ({ size: p.size || 0 }));
+            storageData.images = (storageData.images || []).map(i => ({ size: i.size || 0 }));
+            storageData.documents = (storageData.documents || []).map(d => ({ size: d.size || 0 }));
+        } catch (e) { storageData = { pdfs: [], images: [], documents: [] }; }
+
+        function getInitials(name) {
+            if (!name) return 'U';
+            return name.split(' ').map(w => w.charAt(0).toUpperCase()).join('').substring(0, 2);
+        }
+
+        function formatBytes(bytes) {
+            if (!bytes || isNaN(bytes)) return '0 KB';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+        }
+
+        function showStatus(element, message, type) {
+            if (!element) return;
+            element.textContent = message;
+            element.className = 'status-message ' + type;
+            element.style.display = 'block';
+        }
+
+        const _toastIcons = { success: 'fa-check-circle', error: 'fa-circle-exclamation', warning: 'fa-triangle-exclamation', info: 'fa-circle-info' };
+        let _activeToast = null;
+        function showToast(msg, type = 'success') {
+            if (_activeToast) { _activeToast.classList.remove('show'); setTimeout(() => { if (_activeToast) { _activeToast.remove(); _activeToast = null; } }, 300); }
+            const t = document.createElement('div');
+            t.className = `toast ${type}`;
+            t.innerHTML = `<i class="fas ${_toastIcons[type] || _toastIcons.success}"></i><span>${msg}</span>`;
+            document.body.appendChild(t);
+            _activeToast = t;
+            requestAnimationFrame(() => requestAnimationFrame(() => t.classList.add('show')));
+            setTimeout(() => { t.classList.remove('show'); setTimeout(() => { t.remove(); if (_activeToast === t) _activeToast = null; }, 300); }, 3000);
+        }
+
+        function setWelcomeBanner() {
+            const now = new Date();
+            const hour = now.getHours();
+            const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
+            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            const dateStr = `${days[now.getDay()]}, ${months[now.getMonth()]} ${now.getDate()}`;
+            const dayEl = document.getElementById('welcomeDay');
+            const headingEl = document.getElementById('welcomeHeading');
+            const userName = '<%= user.name.split(" ")[0] %>';
+            if (dayEl) dayEl.textContent = dateStr;
+            if (headingEl) {
+                const em = document.createElement('em');
+                em.textContent = userName + '.';
+                headingEl.textContent = greeting + ', ';
+                headingEl.appendChild(em);
+            }
+        }
+
+        // Dark mode
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const html = document.documentElement;
+        if (localStorage.getItem('theme') === 'dark') html.dataset.theme = 'dark';
+        darkModeToggle.addEventListener('click', () => {
+            const newTheme = html.dataset.theme === 'dark' ? 'light' : 'dark';
+            html.dataset.theme = newTheme;
+            localStorage.setItem('theme', newTheme);
+        });
+
+        // Sidebar collapse
+        document.getElementById('collapseSidebar').addEventListener('click', () => {
+            document.getElementById('layout').classList.toggle('sidebar-collapsed');
+        });
+
+        // Hamburger
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const sidebarEl = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        function openMobileSidebar() { sidebarEl.classList.add('mobile-open'); sidebarOverlay.classList.add('active'); document.body.style.overflow = 'hidden'; }
+        function closeMobileSidebar() { sidebarEl.classList.remove('mobile-open'); sidebarOverlay.classList.remove('active'); document.body.style.overflow = ''; }
+        hamburgerBtn.addEventListener('click', openMobileSidebar);
+        sidebarOverlay.addEventListener('click', closeMobileSidebar);
+        document.querySelectorAll('.nav-item, .sidebar-signout').forEach(el => {
+            el.addEventListener('click', () => { if (window.innerWidth <= 768) closeMobileSidebar(); });
+        });
+
+        // Modal Manager
+        const ModalManager = {
+            open(id) {
+                const m = document.getElementById(id);
+                if (!m) return;
+                if (id === 'unifiedUploadModal') {
+                    const statusEl = document.getElementById('unifiedUploadStatus');
+                    const selectedEl = document.getElementById('unifiedFileSelected');
+                    const btn = document.getElementById('unifiedUploadBtn');
+                    const inp = document.getElementById('unifiedFile');
+                    if (statusEl) { statusEl.style.display = 'none'; statusEl.textContent = ''; }
+                    if (selectedEl) selectedEl.style.display = 'none';
+                    if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-upload"></i> Upload'; }
+                    if (inp) inp.value = '';
+                    m.classList.add('show');
+                    document.body.style.overflow = 'hidden';
+                    const fileInp = document.getElementById('unifiedFile');
+                    if (fileInp) setTimeout(() => fileInp.click(), 0);
+                    return;
+                }
+                m.classList.add('show');
+                document.body.style.overflow = 'hidden';
+            },
+            close(id) { const m = document.getElementById(id); if (m) { m.classList.remove('show'); document.body.style.overflow = ''; } },
+            closeAll() { document.querySelectorAll('.modal.show').forEach(m => m.classList.remove('show')); document.body.style.overflow = ''; }
+        };
+        window.onclick = e => { if (e.target.classList.contains('modal')) ModalManager.closeAll(); };
+
+        // Floating dropdown
+        let activeMenuCard = null;
+        let floatingDropdown = null;
+
+        function createFloatingDropdown() {
+            const el = document.createElement('div');
+            el.className = 'file-card-dropdown';
+            el.id = 'floatingFileMenu';
+            document.body.appendChild(el);
+            document.addEventListener('click', (e) => {
+                if (!el.contains(e.target) && !e.target.closest('.file-card-menu-btn')) closeFloatingMenu();
+            });
+            return el;
+        }
+
+        function closeFloatingMenu() {
+            if (floatingDropdown) floatingDropdown.classList.remove('open');
+            activeMenuCard = null;
+        }
+
+        function toggleFileMenu(e, btn) {
+            e.stopPropagation();
+            if (!floatingDropdown) floatingDropdown = createFloatingDropdown();
+            const card = btn.closest('.file-card');
+            if (activeMenuCard === card && floatingDropdown.classList.contains('open')) { closeFloatingMenu(); return; }
+            activeMenuCard = card;
+            const fileType = card.getAttribute('data-filetype') || card.getAttribute('data-type');
+            const filename = card.getAttribute('data-filename');
+            const fileName = card.getAttribute('data-dlname') || filename;
+            const viewHref = card.getAttribute('data-view') || '#';
+            const dlHref = card.getAttribute('data-download') || '#';
+
+            floatingDropdown.innerHTML = `
+    <a href="${viewHref}" target="_blank" class="dropdown-item"><i class="fas fa-eye"></i> View</a>
+    <a href="${dlHref}" download="${fileName}" class="dropdown-item"><i class="fas fa-download"></i> Download</a>
+    <button class="dropdown-item" onclick="openRenameModal('${fileType}', '${filename}', '${fileName.replace(/'/g, "\\'")}')"><i class="fas fa-pencil-alt"></i> Rename</button>
+    <div class="dropdown-divider"></div>
+    <button class="dropdown-item danger" id="floatingDeleteBtn"><i class="fas fa-trash-alt"></i> Delete</button>
+`;
+
+            floatingDropdown.querySelector('#floatingDeleteBtn').addEventListener('click', (ev) => {
+                ev.stopPropagation();
+                closeFloatingMenu();
+                openDeleteModal(fileType, filename, fileName);
+            });
+
+            const rect = btn.getBoundingClientRect();
+            floatingDropdown.style.top = (rect.bottom + 4) + 'px';
+            floatingDropdown.style.left = Math.max(4, rect.right - 156) + 'px';
+            floatingDropdown.classList.add('open');
+
+            requestAnimationFrame(() => {
+                const dr = floatingDropdown.getBoundingClientRect();
+                if (dr.bottom > window.innerHeight - 8) floatingDropdown.style.top = (rect.top - dr.height - 4) + 'px';
+            });
+        }
+
+        // Rename functionality
+        function openRenameModal(type, filename, name) {
+            currentRenameType = type;
+            currentRenameFilename = filename;
+            currentRenameName = name;
+
+            // Find the file card to get current display name
+            const card = document.querySelector(`.file-card[data-filename="${filename}"]`);
+            if (card) {
+                currentRenameCard = card;
+                const nameElement = card.querySelector('.file-card-name');
+                if (nameElement) {
+                    currentRenameName = nameElement.getAttribute('title') || nameElement.textContent;
+                }
+            }
+
+            // Extract extension
+            const extMatch = currentRenameName.match(/\.[^/.]+$/);
+            currentRenameExt = extMatch ? extMatch[0] : '';
+
+            // Display current name without extension in the modal
+            const nameWithoutExt = currentRenameExt ? currentRenameName.slice(0, -currentRenameExt.length) : currentRenameName;
+
+            document.getElementById('currentFileName').textContent = currentRenameName;
+            document.getElementById('newFileName').value = nameWithoutExt;
+            document.getElementById('renameFileStatus').style.display = 'none';
+
+            // Close any open menu
+            closeFloatingMenu();
+
+            ModalManager.open('renameFileModal');
+
+            // Focus and select the input
+            setTimeout(() => {
+                const input = document.getElementById('newFileName');
+                input.focus();
+                input.select();
+            }, 300);
+        }
+
+        async function confirmRenameFile() {
+            const newName = document.getElementById('newFileName').value.trim();
+            const statusEl = document.getElementById('renameFileStatus');
+
+            if (!newName) {
+                showStatus(statusEl, 'Please enter a new name', 'error');
+                return;
+            }
+
+            // Basic validation
+            if (newName.length > 200) {
+                showStatus(statusEl, 'Filename is too long', 'error');
+                return;
+            }
+
+            if (/[<>:"/\\|?*]/.test(newName)) {
+                showStatus(statusEl, 'Filename contains invalid characters', 'error');
+                return;
+            }
+
+            const endpoints = {
+                pdf: `/rename-pdf/${currentDeleteUserId}/${currentRenameFilename}`,
+                image: `/rename-image/${currentDeleteUserId}/${currentRenameFilename}`,
+                document: `/rename-document/${currentDeleteUserId}/${currentRenameFilename}`
+            };
+
+            const endpoint = endpoints[currentRenameType];
+            if (!endpoint) return;
+
+            try {
+                showStatus(statusEl, 'Renaming...', 'info');
+
+                const response = await fetch(endpoint, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ newName: newName })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showStatus(statusEl, 'File renamed successfully!', 'success');
+                    showToast(`File renamed to "${result.newName}"`, 'success');
+
+                    // Update all grid instances of this file
+                    const grids = ['allFilesGrid', 'pdfFilesGrid', 'imageFilesGrid', 'officeFilesGrid'];
+                    grids.forEach(gridId => {
+                        const grid = document.getElementById(gridId);
+                        if (!grid) return;
+
+                        const cards = grid.querySelectorAll(`.file-card[data-filename="${currentRenameFilename}"]`);
+                        cards.forEach(card => {
+                            const nameElement = card.querySelector('.file-card-name');
+                            const titleAttr = card.querySelector('.file-card-name');
+
+                            if (nameElement) {
+                                // Update display name (truncated)
+                                let displayName = result.newName;
+                                if (displayName.length > 18) {
+                                    displayName = displayName.substring(0, 15) + '...';
+                                }
+                                nameElement.textContent = displayName;
+
+                                // Update full name in title attribute
+                                if (titleAttr) {
+                                    titleAttr.setAttribute('title', result.newName);
+                                }
+
+                                // Update data-name attribute for search
+                                card.setAttribute('data-name', result.newName.toLowerCase());
+
+                                // Update the file extension badge if needed
+                                const extSpan = card.querySelector('.file-card-ext');
+                                if (extSpan) {
+                                    const ext = result.newName.split('.').pop().toUpperCase();
+                                    if (ext.length <= 4) {
+                                        extSpan.textContent = ext;
+                                    }
+                                }
+                            }
+                        });
+                    });
+
+                    // Update storage data if needed (for counts, etc)
+                    if (storageData) {
+                        // Update the name in storageData if you're storing names
+                        // This depends on your storageData structure
+                    }
+
+                    // Close modal after short delay
+                    setTimeout(() => {
+                        ModalManager.close('renameFileModal');
+                    }, 1500);
+
+                    // Refresh activities to show rename action
+                    setTimeout(() => loadActivities(), 500);
+
+                } else {
+                    showStatus(statusEl, result.message || 'Failed to rename file', 'error');
+                    showToast(result.message || 'Could not rename file.', 'error');
+                }
+            } catch (error) {
+                console.error('Rename error:', error);
+                showStatus(statusEl, 'An unexpected error occurred', 'error');
+                showToast('An unexpected error occurred.', 'error');
+            }
+        }
+
+        // Add keyboard support for rename modal
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' && document.getElementById('renameFileModal')?.classList.contains('show')) {
+                e.preventDefault();
+                confirmRenameFile();
+            }
+        });
+
+        // Tabs
+        function setupTabs() {
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const tabId = item.getAttribute('data-tab');
+                    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+                    item.classList.add('active');
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    const target = document.getElementById(tabId + 'Tab');
+                    if (target) target.classList.add('active');
+                    if (tabId === 'files') { requestAnimationFrame(() => { initializeFileTypeTabs(); populateFileTypeGrids(); const at = document.querySelector('.type-tab-btn.active'); if (at) at.click(); }); }
+                    if (tabId === 'activity') { loadActivities(); }
+                    if (tabId === 'dashboard') { calculateStorage(); }
+                });
+            });
+        }
+
+        function handleFileTypeClick(e) {
+            const button = e.currentTarget;
+            const fileType = button.getAttribute('data-type');
+            document.querySelectorAll('.type-tab-btn').forEach(b => b.classList.remove('active'));
+            button.classList.add('active');
+            const grids = { all: 'allFilesGrid', pdf: 'pdfFilesGrid', images: 'imageFilesGrid', office: 'officeFilesGrid' };
+            Object.values(grids).forEach(id => { const g = document.getElementById(id); if (g) g.style.display = 'none'; });
+            const target = document.getElementById(grids[fileType]);
+            if (target) target.style.display = 'grid';
+            performSearch();
+        }
+
+        function initializeFileTypeTabs() {
+            document.querySelectorAll('.type-tab-btn').forEach(button => {
+                button.removeEventListener('click', handleFileTypeClick);
+                button.addEventListener('click', handleFileTypeClick);
+            });
+        }
+
+        function populateFileTypeGrids() {
+            const allFilesGrid = document.getElementById('allFilesGrid');
+            const pdfGrid = document.getElementById('pdfFilesGrid');
+            const imageGrid = document.getElementById('imageFilesGrid');
+            const officeGrid = document.getElementById('officeFilesGrid');
+            if (!allFilesGrid) return;
+            [pdfGrid, imageGrid, officeGrid].forEach(g => { if (g) g.innerHTML = ''; });
+            Array.from(allFilesGrid.querySelectorAll('.file-card')).forEach(item => {
+                const fileType = item.getAttribute('data-type');
+                const clone = item.cloneNode(true);
+                const menuBtn = clone.querySelector('.file-card-menu-btn');
+                if (menuBtn) menuBtn.addEventListener('click', (e) => toggleFileMenu(e, menuBtn));
+                if (fileType === 'pdf' && pdfGrid) pdfGrid.appendChild(clone);
+                else if (fileType === 'image' && imageGrid) imageGrid.appendChild(clone);
+                else if (fileType === 'document' && officeGrid) officeGrid.appendChild(clone);
+            });
+            const makeEmpty = (grid, icon, label) => {
+                if (grid && grid.children.length === 0) grid.innerHTML = `<div class="empty-state"><div class="empty-icon"><i class="${icon}"></i></div><p>${label}</p></div>`;
+            };
+            makeEmpty(pdfGrid, 'fas fa-file-pdf', 'No PDF files');
+            makeEmpty(imageGrid, 'fas fa-file-image', 'No image files');
+            makeEmpty(officeGrid, 'fas fa-file-word', 'No office documents');
+        }
+
+        // Search
+        const searchInput = document.getElementById('searchInput');
+        function performSearch() {
+            if (!searchInput) return;
+            const term = searchInput.value.toLowerCase().trim();
+            const activeTab = document.querySelector('.type-tab-btn.active');
+            const fileType = activeTab ? activeTab.getAttribute('data-type') : 'all';
+            const gridMap = { all: 'allFilesGrid', pdf: 'pdfFilesGrid', images: 'imageFilesGrid', office: 'officeFilesGrid' };
+            const grid = document.getElementById(gridMap[fileType]);
+            if (!grid) return;
+            const items = grid.querySelectorAll('.file-card');
+            if (items.length === 0) return;
+            let visibleCount = 0;
+            items.forEach(item => {
+                const name = item.getAttribute('data-name') || '';
+                const matches = term === '' || name.includes(term);
+                item.style.display = matches ? 'flex' : 'none';
+                if (matches) visibleCount++;
+            });
+            const existing = grid.querySelector('.empty-state.search-empty');
+            if (existing) existing.remove();
+            if (visibleCount === 0 && items.length > 0) {
+                const msg = document.createElement('div');
+                msg.className = 'empty-state search-empty';
+                msg.innerHTML = '<div class="empty-icon"><i class="fas fa-search"></i></div><p>No files match your search.</p>';
+                grid.appendChild(msg);
+            }
+        }
+        if (searchInput) searchInput.addEventListener('input', performSearch);
+
+        // Storage
+        function calculateStorage() {
+            try {
+                if (!storageData) return;
+                const maxSize = 100 * 1024 * 1024;
+                let pdfSize = 0, imgSize = 0, officeSize = 0;
+                storageData.pdfs.forEach(p => { pdfSize += p.size || 0; });
+                storageData.images.forEach(i => { imgSize += i.size || 0; });
+                storageData.documents.forEach(d => { officeSize += d.size || 0; });
+                const totalSize = pdfSize + imgSize + officeSize;
+                const freeMB = (maxSize - totalSize) / (1024 * 1024);
+                const percentage = Math.min((totalSize / maxSize) * 100, 100);
+                const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+                set('storageUsedValue', percentage.toFixed(2));
+                set('storagePercentage', percentage.toFixed(2) + '%');
+                set('storageFreeMB', freeMB.toFixed(2) + ' MB free');
+                const pdfPct = (pdfSize / maxSize) * 100;
+                const imgPct = (imgSize / maxSize) * 100;
+                const offPct = (officeSize / maxSize) * 100;
+                const sd = document.getElementById('segDocs'); const si = document.getElementById('segImg'); const so = document.getElementById('segOther');
+                if (sd) sd.style.width = pdfPct + '%';
+                if (si) si.style.width = imgPct + '%';
+                if (so) so.style.width = offPct + '%';
+                const totalFiles = storageData.pdfs.length + storageData.images.length + storageData.documents.length;
+                const pb = document.getElementById('pdfBar'); const ib = document.getElementById('imgBar'); const ob = document.getElementById('officeBar');
+                if (totalFiles > 0) {
+                    if (pb) pb.style.width = Math.round((storageData.pdfs.length / totalFiles) * 100) + '%';
+                    if (ib) ib.style.width = Math.round((storageData.images.length / totalFiles) * 100) + '%';
+                    if (ob) ob.style.width = Math.round((storageData.documents.length / totalFiles) * 100) + '%';
+                } else {
+                    if (pb) pb.style.width = '0%';
+                    if (ib) ib.style.width = '0%';
+                    if (ob) ob.style.width = '0%';
+                }
+                // Sync overview counts directly from storageData
+                set('pdfCountCard', storageData.pdfs.length);
+                set('imageCountCard', storageData.images.length);
+                set('officeCountCard', storageData.documents.length);
+                set('totalFilesCount', totalFiles);
+                set('totalFilesCountSidebar', totalFiles);
+            } catch (error) { console.error('Storage error:', error); }
+        }
+
+        // Password
+        function togglePassword() {
+            const pt = document.getElementById('passwordText');
+            const toggle = document.getElementById('passwordToggle');
+            passwordVisible = !passwordVisible;
+            if (passwordVisible) { pt.textContent = userPassword; toggle.innerHTML = '<i class="fas fa-eye-slash"></i> Hide'; }
+            else { pt.textContent = '••••••••'; toggle.innerHTML = '<i class="fas fa-eye"></i> Show'; }
+        }
+
+        function toggleFieldPassword(fieldId, btn) {
+            const input = document.getElementById(fieldId);
+            if (input) {
+                input.type = input.type === 'password' ? 'text' : 'password';
+                btn.innerHTML = input.type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+            }
+        }
+
+        function checkPasswordStrength(val) {
+            const bars = ['sb1', 'sb2', 'sb3', 'sb4'].map(id => document.getElementById(id));
+            const label = document.getElementById('strengthLabel');
+            let score = 0;
+            if (val.length >= 8) score++;
+            if (/[A-Z]/.test(val)) score++;
+            if (/[0-9]/.test(val)) score++;
+            if (/[^A-Za-z0-9]/.test(val)) score++;
+            bars.forEach((b, i) => { if (b) { b.className = 's-bar'; if (i < score) { b.classList.add('filled'); if (score <= 1) b.classList.add('danger'); else if (score === 2) b.classList.add('warn'); } } });
+            if (label) { if (val.length === 0) { label.textContent = 'No password'; } else { const s = ['', 'Weak', 'Fair', 'Good', 'Strong']; label.textContent = s[score] || 'Weak'; } }
+        }
+
+        function resetPasswordStrength() {
+            ['sb1', 'sb2', 'sb3', 'sb4'].forEach(id => { const bar = document.getElementById(id); if (bar) bar.className = 's-bar'; });
+            const label = document.getElementById('strengthLabel'); if (label) label.textContent = 'No password';
+        }
+
+        function clearPasswordFields() {
+            ['currentPassword', 'newPassword', 'confirmPassword'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+            resetPasswordStrength();
+            const s = document.getElementById('passwordChangeStatus'); if (s) s.style.display = 'none';
+        }
+
+        async function changePassword() {
+            const curr = document.getElementById('currentPassword').value;
+            const newPw = document.getElementById('newPassword').value;
+            const conf = document.getElementById('confirmPassword').value;
+            const statusEl = document.getElementById('passwordChangeStatus');
+            if (!curr || !newPw || !conf) return showStatus(statusEl, 'All fields are required', 'error');
+            if (newPw !== conf) return showStatus(statusEl, 'New passwords do not match', 'error');
+            if (newPw.length < 6) return showStatus(statusEl, 'Password must be at least 6 characters', 'error');
+            try {
+                showStatus(statusEl, 'Updating...', 'info');
+                const r = await fetch('/change-password', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ currentPassword: curr, newPassword: newPw, confirmPassword: conf }) });
+                const result = await r.json();
+                if (result.success) {
+                    showStatus(statusEl, 'Password updated!', 'success');
+                    showToast('Password updated successfully.', 'success');
+                    userPassword = newPw; clearPasswordFields();
+                } else {
+                    showStatus(statusEl, result.message || 'Failed', 'error');
+                    showToast(result.message || 'Could not update password.', 'error');
+                }
+            } catch (e) { showStatus(statusEl, 'An error occurred', 'error'); showToast('An unexpected error occurred.', 'error'); }
+        }
+
+        async function changePasswordModal() {
+            const curr = document.getElementById('modalCurrentPassword').value;
+            const newPw = document.getElementById('modalNewPassword').value;
+            const conf = document.getElementById('modalConfirmPassword').value;
+            const statusEl = document.getElementById('changePasswordStatus');
+            if (!curr || !newPw || !conf) return showStatus(statusEl, 'All fields are required', 'error');
+            if (newPw !== conf) return showStatus(statusEl, 'Passwords do not match', 'error');
+            if (newPw.length < 6) return showStatus(statusEl, 'Password must be at least 6 characters', 'error');
+            try {
+                showStatus(statusEl, 'Updating...', 'info');
+                const r = await fetch('/change-password', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ currentPassword: curr, newPassword: newPw, confirmPassword: conf }) });
+                const result = await r.json();
+                if (result.success) {
+                    showStatus(statusEl, 'Password updated!', 'success');
+                    showToast('Password updated successfully.', 'success');
+                    userPassword = newPw; ModalManager.close('changePasswordModal');
+                } else {
+                    showStatus(statusEl, result.message || 'Failed', 'error');
+                    showToast(result.message || 'Could not update password.', 'error');
+                }
+            } catch (e) { showStatus(statusEl, 'An error occurred', 'error'); showToast('An unexpected error occurred.', 'error'); }
+        }
+
+        // File Upload
+        const unifiedFileInput = document.getElementById('unifiedFile');
+        const unifiedFileLabel = document.getElementById('unifiedFileLabel');
+        const unifiedFileSelected = document.getElementById('unifiedFileSelected');
+        const unifiedFileName = document.getElementById('unifiedFileName');
+        const unifiedUploadBtn = document.getElementById('unifiedUploadBtn');
+        if (unifiedFileInput) {
+            unifiedFileInput.addEventListener('change', function () {
+                if (this.files.length > 0) { unifiedFileName.textContent = this.files[0].name; unifiedFileSelected.style.display = 'block'; unifiedUploadBtn.disabled = false; }
+            });
+            ['dragover', 'dragleave', 'drop'].forEach(ev => {
+                unifiedFileLabel.addEventListener(ev, e => { e.preventDefault(); if (ev === 'dragover') unifiedFileLabel.classList.add('drag-over'); else unifiedFileLabel.classList.remove('drag-over'); });
+            });
+            unifiedFileLabel.addEventListener('drop', e => { e.preventDefault(); if (e.dataTransfer.files.length) { unifiedFileInput.files = e.dataTransfer.files; unifiedFileInput.dispatchEvent(new Event('change')); } });
+        }
+
+        const uploadForm = document.getElementById('unifiedUploadForm');
+        if (uploadForm) {
+            uploadForm.addEventListener('submit', async function (e) {
+                e.preventDefault();
+                const statusEl = document.getElementById('unifiedUploadStatus');
+                const file = unifiedFileInput.files[0];
+                if (!file) return showStatus(statusEl, 'Please select a file', 'error');
+                const formData = new FormData();
+                const t = file.type;
+                let endpoint = '';
+                if (t === 'application/pdf') { formData.append('pdf', file); endpoint = '/upload-pdf'; }
+                else if (t.startsWith('image/')) { formData.append('image', file); endpoint = '/upload-image'; }
+                else if (t.includes('word') || t.includes('excel') || t.includes('spreadsheet') || t.includes('powerpoint') || t.includes('presentation') || file.name.match(/\.(doc|docx|xls|xlsx|ppt|pptx)$/i)) { formData.append('document', file); endpoint = '/upload-document'; }
+                else return showStatus(statusEl, 'Invalid file type.', 'error');
+                try {
+                    showStatus(statusEl, 'Uploading...', 'info');
+                    unifiedUploadBtn.disabled = true;
+                    unifiedUploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
+                    const r = await fetch(endpoint, { method: 'POST', body: formData });
+                    const result = await r.json();
+                    if (r.ok) {
+                        showStatus(statusEl, 'Upload successful!', 'success');
+                        showToast(`"${file.name}" uploaded successfully.`, 'success');
+                        try {
+                            const newEntry = { size: file.size };
+                            let typeCategory = 'other';
+                            if (t === 'application/pdf') { storageData.pdfs.push(newEntry); typeCategory = 'pdf'; }
+                            else if (t.startsWith('image/')) { storageData.images.push(newEntry); typeCategory = 'image'; }
+                            else { storageData.documents.push(newEntry); typeCategory = 'office'; }
+                            calculateStorage();
+                            const totalEl = document.getElementById('totalFilesCount');
+                            const sidebarBadge = document.getElementById('totalFilesCountSidebar');
+                            const pdfCountEl = document.getElementById('pdfCountCard');
+                            const imgCountEl = document.getElementById('imageCountCard');
+                            const officeCountEl = document.getElementById('officeCountCard');
+                            const pdfTabBadge = document.getElementById('pdfCount');
+                            const imgTabBadge = document.getElementById('imageCount');
+                            const officeTabBadge = document.getElementById('officeCount');
+                            const allCountBadge = document.getElementById('allCount');
+                            if (totalEl) totalEl.textContent = parseInt(totalEl.textContent || '0', 10) + 1;
+                            if (sidebarBadge) sidebarBadge.textContent = parseInt(sidebarBadge.textContent || '0', 10) + 1;
+                            if (allCountBadge) allCountBadge.textContent = parseInt(allCountBadge.textContent || '0', 10) + 1;
+                            if (typeCategory === 'pdf' && pdfCountEl) pdfCountEl.textContent = parseInt(pdfCountEl.textContent || '0', 10) + 1;
+                            if (typeCategory === 'image' && imgCountEl) imgCountEl.textContent = parseInt(imgCountEl.textContent || '0', 10) + 1;
+                            if (typeCategory === 'office' && officeCountEl) officeCountEl.textContent = parseInt(officeCountEl.textContent || '0', 10) + 1;
+                            if (typeCategory === 'pdf' && pdfTabBadge) pdfTabBadge.textContent = parseInt(pdfTabBadge.textContent || '0', 10) + 1;
+                            if (typeCategory === 'image' && imgTabBadge) imgTabBadge.textContent = parseInt(imgTabBadge.textContent || '0', 10) + 1;
+                            if (typeCategory === 'office' && officeTabBadge) officeTabBadge.textContent = parseInt(officeTabBadge.textContent || '0', 10) + 1;
+                            setTimeout(() => loadActivities(), 500);
+                            try {
+                                const ftype = typeCategory === 'pdf' ? 'pdf' : typeCategory === 'image' ? 'image' : 'document';
+                                let thumbCls = 'type-generic', iconCls = 'fas fa-file', extLabel = 'FILE', extCls = '';
+                                if (ftype === 'pdf') { thumbCls = 'type-pdf'; iconCls = 'fas fa-file-pdf'; extLabel = 'PDF'; extCls = 'ext-pdf'; }
+                                else if (ftype === 'image') { thumbCls = 'type-image'; iconCls = 'fas fa-file-image'; extLabel = file.name.split('.').pop().toUpperCase(); extCls = 'ext-image'; }
+                                else {
+                                    const ext = file.name.split('.').pop().toLowerCase();
+                                    extLabel = ext.toUpperCase();
+                                    if (['doc', 'docx'].includes(ext)) { thumbCls = 'type-word'; iconCls = 'fas fa-file-word'; extCls = 'ext-word'; }
+                                    else if (['xls', 'xlsx'].includes(ext)) { thumbCls = 'type-excel'; iconCls = 'fas fa-file-excel'; extCls = 'ext-excel'; }
+                                    else if (['ppt', 'pptx'].includes(ext)) { thumbCls = 'type-pptx'; iconCls = 'fas fa-file-powerpoint'; extCls = 'ext-pptx'; }
+                                    else { thumbCls = 'type-word'; iconCls = 'fas fa-file-alt'; extCls = 'ext-word'; }
+                                }
+                                const serverFilename = (result && result.file && result.file.filename) || (result && result.filename) || file.name;
+                                let displayName = file.name;
+                                if (displayName.length > 18) displayName = displayName.substring(0, 15) + '...';
+                                const card = document.createElement('div');
+                                card.className = 'file-card';
+                                card.dataset.type = ftype;
+                                card.dataset.name = file.name.toLowerCase();
+                                card.dataset.filename = serverFilename;
+                                card.dataset.filetype = ftype;
+                                card.style.opacity = '0';
+                                card.style.transform = 'scale(0.9) translateY(8px)';
+                                card.style.transition = 'opacity 0.3s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                                card.innerHTML = `
+                                    <div class="file-card-thumb ${thumbCls}">
+                                        <div class="file-card-thumb-icon"><i class="${iconCls}"></i></div>
+                                        <button class="file-card-menu-btn" title="Options" onclick="toggleFileMenu(event, this)"><i class="fas fa-ellipsis-v"></i></button>
+                                    </div>
+                                    <div class="file-card-info">
+                                        <div class="file-card-name" title="${file.name}">${displayName}</div>
+                                        <span class="file-card-ext ${extCls}">${extLabel}</span>
+                                    </div>`;
+                                const grid = document.getElementById('allFilesGrid');
+                                if (grid) {
+                                    const empty = grid.querySelector('.empty-state');
+                                    if (empty) empty.remove();
+                                    grid.insertBefore(card, grid.firstChild);
+                                    requestAnimationFrame(() => requestAnimationFrame(() => {
+                                        card.style.opacity = '1';
+                                        card.style.transform = 'scale(1) translateY(0)';
+                                    }));
+                                }
+                            } catch (injectErr) { console.error('Card inject failed:', injectErr); }
+                        } catch (e) { console.error('local stats update failed', e); }
+                        ModalManager.close('unifiedUploadModal');
+                        unifiedUploadBtn.disabled = false;
+                        unifiedUploadBtn.innerHTML = '<i class="fas fa-upload"></i> Upload';
+                        unifiedFileInput.value = '';
+                        unifiedFileSelected.style.display = 'none';
+                    } else {
+                        showStatus(statusEl, result.message || 'Upload failed', 'error');
+                        showToast(result.message || 'Could not upload file.', 'error');
+                        unifiedUploadBtn.disabled = false;
+                        unifiedUploadBtn.innerHTML = '<i class="fas fa-upload"></i> Upload';
+                    }
+                } catch (err) {
+                    showStatus(statusEl, 'An error occurred', 'error');
+                    showToast('An unexpected error occurred.', 'error');
+                    unifiedUploadBtn.disabled = false;
+                    unifiedUploadBtn.innerHTML = '<i class="fas fa-upload"></i> Upload';
+                }
+            });
+        }
+
+        // Profile Picture
+        const profileFileInput = document.getElementById('profileFile');
+        const profileFileLabel = document.getElementById('profileFileLabel');
+        const profileFileSelected = document.getElementById('profileFileSelected');
+        const profileFileName = document.getElementById('profileFileName');
+        const uploadProfileBtn = document.getElementById('uploadProfileBtn');
+        if (profileFileInput) {
+            profileFileInput.addEventListener('change', function () {
+                const file = this.files[0]; if (!file) return;
+                const statusEl = document.getElementById('profileUploadStatus');
+                if (!file.type.match('image.*')) return showStatus(statusEl, 'Please select an image file', 'error');
+                if (file.size > 5 * 1024 * 1024) return showStatus(statusEl, 'Image must be less than 5MB', 'error');
+                profileFileName.textContent = file.name; profileFileSelected.style.display = 'block'; uploadProfileBtn.disabled = false; statusEl.style.display = 'none';
+                const reader = new FileReader(); reader.onload = e => { const ma = document.getElementById('modalAvatar'); if (ma) ma.innerHTML = `<img src="${e.target.result}" alt="Profile" style="width:100%;height:100%;object-fit:cover;">`; }; reader.readAsDataURL(file);
+            });
+            ['dragover', 'dragleave', 'drop'].forEach(ev => {
+                profileFileLabel.addEventListener(ev, e => { e.preventDefault(); if (ev === 'dragover') profileFileLabel.classList.add('drag-over'); else profileFileLabel.classList.remove('drag-over'); });
+            });
+            profileFileLabel.addEventListener('drop', e => { e.preventDefault(); if (e.dataTransfer.files.length) { profileFileInput.files = e.dataTransfer.files; profileFileInput.dispatchEvent(new Event('change')); } });
+        }
+
+        async function uploadProfilePicture() {
+            const statusEl = document.getElementById('profileUploadStatus');
+            const file = profileFileInput.files[0]; if (!file) return showStatus(statusEl, 'Please select an image', 'error');
+            const formData = new FormData(); formData.append('profile', file);
+            try {
+                showStatus(statusEl, 'Updating...', 'info');
+                uploadProfileBtn.disabled = true;
+                uploadProfileBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Updating...';
+                const r = await fetch('/upload-profile-picture', { method: 'POST', body: formData });
+                const result = await r.json();
+                if (r.ok) {
+                    showStatus(statusEl, 'Profile updated!', 'success');
+                    showToast('Profile picture updated.', 'success');
+                    const ua = document.getElementById('userAvatar');
+                    const reader = new FileReader();
+                    reader.onload = e => { if (ua) ua.innerHTML = `<img src="${e.target.result}" alt="Profile" style="width:100%;height:100%;object-fit:cover;">`; };
+                    reader.readAsDataURL(file);
+                    ModalManager.close('profileModal');
+                    uploadProfileBtn.disabled = false;
+                    uploadProfileBtn.innerHTML = '<i class="fas fa-check"></i> Update';
+                    setTimeout(() => loadActivities(), 500);
+                } else {
+                    showStatus(statusEl, result.message || 'Update failed', 'error');
+                    showToast(result.message || 'Could not update profile picture.', 'error');
+                    uploadProfileBtn.disabled = false;
+                    uploadProfileBtn.innerHTML = '<i class="fas fa-check"></i> Update';
+                }
+            } catch (err) {
+                showStatus(statusEl, 'An error occurred', 'error');
+                showToast('An unexpected error occurred.', 'error');
+                uploadProfileBtn.disabled = false;
+                uploadProfileBtn.innerHTML = '<i class="fas fa-check"></i> Update';
+            }
+        }
+
+        // Delete File
+        function openDeleteModal(type, filename, name) {
+            currentDeleteType = type;
+            currentDeleteFilename = filename;
+            currentDeleteName = name;
+            const el = document.getElementById('fileToDeleteName');
+            if (el) el.textContent = name;
+            ModalManager.open('deleteFileModal');
+        }
+
+        async function confirmDeleteFile() {
+            if (!currentDeleteType || !currentDeleteFilename) return;
+            const endpoints = {
+                pdf: `/delete-pdf/${currentDeleteUserId}/${currentDeleteFilename}`,
+                image: `/delete-image/${currentDeleteUserId}/${currentDeleteFilename}`,
+                document: `/delete-document/${currentDeleteUserId}/${currentDeleteFilename}`
+            };
+            const endpoint = endpoints[currentDeleteType]; if (!endpoint) return;
+            ModalManager.close('deleteFileModal');
+            try {
+                const response = await fetch(endpoint, { method: 'DELETE' });
+                if (response.ok) {
+                    showToast(`"${currentDeleteName}" deleted.`, 'success');
+                    const grids = ['allFilesGrid', 'pdfFilesGrid', 'imageFilesGrid', 'officeFilesGrid'];
+                    grids.forEach(gid => {
+                        const grid = document.getElementById(gid);
+                        if (!grid) return;
+                        const card = grid.querySelector(`[data-filename="${currentDeleteFilename}"]`);
+                        if (card) {
+                            card.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
+                            card.style.opacity = '0';
+                            card.style.transform = 'scale(0.85)';
+                            setTimeout(() => {
+                                card.remove();
+                                const remaining = grid.querySelectorAll('.file-card');
+                                if (!remaining.length && gid === 'allFilesGrid') {
+                                    grid.innerHTML = `<div class="empty-state"><div class="empty-icon"><i class="fas fa-folder-open"></i></div><p>No files yet.</p><div class="empty-state-sub">Upload your first file to get started.</div><button class="btn btn-primary" style="margin-top:12px;" onclick="ModalManager.open('unifiedUploadModal')"><i class="fas fa-cloud-upload-alt"></i> Upload File</button></div>`;
+                                }
+                            }, 270);
+                        }
+                    });
+                    const typeMap = { pdf: 'pdf', image: 'image', document: 'office' };
+                    const cat = typeMap[currentDeleteType] || 'other';
+                    const totalEl = document.getElementById('totalFilesCount');
+                    const sidebarBadge = document.getElementById('totalFilesCountSidebar');
+                    const allCountBadge = document.getElementById('allCount');
+                    const pdfTabBadge = document.getElementById('pdfCount');
+                    const imgTabBadge = document.getElementById('imageCount');
+                    const officeTabBadge = document.getElementById('officeCount');
+                    const pdfCountEl = document.getElementById('pdfCountCard');
+                    const imgCountEl = document.getElementById('imageCountCard');
+                    const officeCountEl = document.getElementById('officeCountCard');
+                    const dec = el => { if (el) el.textContent = Math.max(0, parseInt(el.textContent || '1', 10) - 1); };
+                    dec(totalEl); dec(sidebarBadge); dec(allCountBadge);
+                    if (cat === 'pdf') { dec(pdfTabBadge); dec(pdfCountEl); if (storageData.pdfs && storageData.pdfs.length) storageData.pdfs.shift(); }
+                    if (cat === 'image') { dec(imgTabBadge); dec(imgCountEl); if (storageData.images && storageData.images.length) storageData.images.shift(); }
+                    if (cat === 'office') { dec(officeTabBadge); dec(officeCountEl); if (storageData.documents && storageData.documents.length) storageData.documents.shift(); }
+                    setTimeout(() => calculateStorage(), 50);
+                    setTimeout(() => loadActivities(), 500);
+                } else { showToast('Could not delete the file. Please try again.', 'error'); }
+            } catch (e) { showToast('An unexpected error occurred.', 'error'); }
+        }
+
+        // Activity
+        async function loadActivities() {
+            try {
+                const response = await fetch('/api/user-activities?limit=50');
+                if (!response.ok) throw new Error('Failed to load activities');
+                const activities = await response.json();
+                const recentBadge = document.getElementById('recentActivityBadge');
+                if (recentBadge) {
+                    if (activities.length > 0) {
+                        recentBadge.textContent = Math.min(activities.length, 9) + (activities.length > 9 ? '+' : '');
+                        recentBadge.style.display = 'inline-block';
+                    } else { recentBadge.style.display = 'none'; }
+                }
+                const totalCount = document.getElementById('totalActivitiesCount');
+                if (totalCount) totalCount.textContent = activities.length;
+                renderActivityTimeline(activities);
+                renderRecentActivities(activities.slice(0, 5));
+            } catch (error) { console.error('Error loading activities:', error); showActivityError(); }
+        }
+
+        function renderActivityTimeline(activities) {
+            const timeline = document.getElementById('activityTimeline');
+            if (!timeline) return;
+            if (!activities || activities.length === 0) {
+                timeline.innerHTML = `<div style="text-align:center;padding:48px;color:var(--gray);"><i class="fas fa-history" style="font-size:32px;opacity:0.3;display:block;margin-bottom:12px;"></i><p style="font-size:14px;font-weight:600;color:var(--ink);">No activity yet</p><small>Your actions will appear here</small></div>`;
+                return;
+            }
+            timeline.innerHTML = activities.map((activity, i) => {
+                const icon = getActivityIcon(activity.type);
+                const badgeClass = getActivityBadgeClass(activity.type);
+                const timeAgo = getTimeAgo(new Date(activity.createdAt));
+                const ip = activity.ip ? activity.ip.replace('::ffff:', '') : 'Unknown';
+                return `
+                    <div class="activity-item" style="animation-delay:${i * 0.04}s">
+                        <div class="activity-icon ${icon.class}"><i class="${icon.icon}"></i></div>
+                        <div class="activity-content">
+                            <div>
+                                <span class="activity-title">${activity.description}</span>
+                                <span class="activity-badge ${badgeClass}">${getActivityTypeLabel(activity.type)}</span>
+                            </div>
+                            <div class="activity-meta">
+                                <span><i class="far fa-clock" style="margin-right:3px;"></i>${timeAgo}</span>
+                                ${activity.ip ? `<span><i class="fas fa-network-wired" style="margin-right:3px;"></i>${ip}</span>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderRecentActivities(activities) {
+            const list = document.getElementById('recentActivityList');
+            if (!list) return;
+            if (!activities || activities.length === 0) {
+                list.innerHTML = `<div style="padding:12px 0;text-align:center;color:var(--gray);font-size:12px;"><i class="fas fa-history" style="display:block;font-size:18px;opacity:0.3;margin-bottom:4px;"></i>No recent activity</div>`;
+                return;
+            }
+            list.innerHTML = activities.map(activity => {
+                const dotClass = getActivityDotClass(activity.type);
+                const timeAgo = getTimeAgo(new Date(activity.createdAt));
+                const description = truncateText(activity.description, 40);
+                return `
+                    <div class="recent-activity-item">
+                        <div class="recent-dot ${dotClass}"></div>
+                        <span class="recent-text" title="${activity.description}">${description}</span>
+                        <span class="recent-time">${timeAgo}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function getActivityIcon(type) {
+            const icons = {
+                'file_upload': { class: 'upload', icon: 'fas fa-cloud-upload-alt' },
+                'file_delete': { class: 'delete', icon: 'fas fa-trash-alt' },
+                'file_rename': { class: 'profile', icon: 'fas fa-pencil-alt' }, // Reuse profile style or create new
+                'login': { class: 'login', icon: 'fas fa-sign-in-alt' },
+                'profile_update': { class: 'profile', icon: 'fas fa-user-edit' },
+                'password_change': { class: 'password', icon: 'fas fa-key' }
+            };
+            return icons[type] || { class: 'login', icon: 'fas fa-history' };
+        }
+
+        function getActivityBadgeClass(type) {
+            return {
+                'file_upload': 'upload',
+                'file_delete': 'delete',
+                'file_rename': 'profile'
+            }[type] || '';
+        }
+
+        function getActivityDotClass(type) {
+            return {
+                'file_upload': 'upload',
+                'file_delete': 'delete',
+                'file_rename': 'profile',
+                'login': 'login',
+                'profile_update': 'profile',
+                'password_change': 'password'
+            }[type] || 'login';
+        }
+
+        function getActivityTypeLabel(type) {
+            return {
+                'file_upload': 'UPLOAD',
+                'file_delete': 'DELETE',
+                'file_rename': 'RENAME',
+                'login': 'LOGIN',
+                'profile_update': 'PROFILE',
+                'password_change': 'SECURITY'
+            }[type] || 'ACTIVITY';
+        }
+
+        function getTimeAgo(date) {
+            const seconds = Math.floor((new Date() - date) / 1000);
+            let interval = Math.floor(seconds / 31536000);
+            if (interval >= 1) return interval + ' year' + (interval === 1 ? '' : 's') + ' ago';
+            interval = Math.floor(seconds / 2592000);
+            if (interval >= 1) return interval + ' month' + (interval === 1 ? '' : 's') + ' ago';
+            interval = Math.floor(seconds / 86400);
+            if (interval >= 1) return interval + ' day' + (interval === 1 ? '' : 's') + ' ago';
+            interval = Math.floor(seconds / 3600);
+            if (interval >= 1) return interval + ' hour' + (interval === 1 ? '' : 's') + ' ago';
+            interval = Math.floor(seconds / 60);
+            if (interval >= 1) return interval + ' minute' + (interval === 1 ? '' : 's') + ' ago';
+            return 'just now';
+        }
+
+        function truncateText(text, maxLength) {
+            if (!text) return '';
+            return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
+        }
+
+        function showActivityError() {
+            const timeline = document.getElementById('activityTimeline');
+            if (timeline) timeline.innerHTML = `<div style="text-align:center;padding:40px;color:var(--danger);"><i class="fas fa-exclamation-triangle" style="font-size:24px;display:block;margin-bottom:8px;"></i>Failed to load activities</div>`;
+            const recentList = document.getElementById('recentActivityList');
+            if (recentList) recentList.innerHTML = `<div style="padding:12px;text-align:center;color:var(--danger);font-size:12px;"><i class="fas fa-exclamation-circle"></i> Error loading</div>`;
+        }
+
+        // Delete Account
+        async function confirmDeleteAccount() {
+            ModalManager.close('deleteModal');
+            document.getElementById('deleteAnimation').classList.add('active');
+            await new Promise(r => setTimeout(r, 2000));
+            try {
+                const r = await fetch('/delete-account', { method: 'DELETE', headers: { 'Content-Type': 'application/json' } });
+                const result = await r.json();
+                if (result.success) { sessionStorage.clear(); localStorage.clear(); window.location.href = result.redirect || '/'; }
+                else { document.getElementById('deleteAnimation').classList.remove('active'); showToast('Could not delete account. Please try again.', 'error'); }
+            } catch (e) { document.getElementById('deleteAnimation').classList.remove('active'); showToast('An unexpected error occurred.', 'error'); }
+        }
+
+        // Init
+        window.addEventListener('load', function () {
+            setWelcomeBanner();
+            setupTabs();
+            calculateStorage();
+            const activeNav = document.querySelector('.nav-item.active');
+            if (activeNav) { const tabId = activeNav.getAttribute('data-tab'); const t = document.getElementById(tabId + 'Tab'); if (t) t.classList.add('active'); }
+            loadActivities();
+            setTimeout(() => {
+                const loader = document.getElementById('loader');
+                if (loader) { loader.style.opacity = '0'; setTimeout(() => loader.style.display = 'none', 300); }
+            }, 600);
+        });
+    </script>
+</body>
+
+</html>

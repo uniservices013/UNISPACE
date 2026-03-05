@@ -1,0 +1,1630 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg viewBox='0 0 28 28' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='t' x1='7' y1='3' x2='21' y2='13' gradientUnits='userSpaceOnUse'%3E%3Cstop offset='0%25' stop-color='%23a5b4fc'/%3E%3Cstop offset='100%25' stop-color='%237c75f2'/%3E%3C/linearGradient%3E%3ClinearGradient id='l' x1='3' y1='13' x2='14' y2='26' gradientUnits='userSpaceOnUse'%3E%3Cstop offset='0%25' stop-color='%236366f1'/%3E%3Cstop offset='100%25' stop-color='%234338ca'/%3E%3C/linearGradient%3E%3ClinearGradient id='r' x1='14' y1='13' x2='25' y2='26' gradientUnits='userSpaceOnUse'%3E%3Cstop offset='0%25' stop-color='%23818cf8'/%3E%3Cstop offset='100%25' stop-color='%235b54e8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M14 2L24.5 8L14 13.2L3.5 8Z' fill='url(%23t)'/%3E%3Cpath d='M3 9.2L13 14.5V25.5L3 20.2Z' fill='url(%23l)'/%3E%3Cpath d='M25 9.2L15 14.5V25.5L25 20.2Z' fill='url(%23r)'/%3E%3C/svg%3E">
+    <title>UniSpace - Your Private Digital Space</title>
+    <!-- Google Fonts and Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Your existing CSS remains exactly the same */
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #10b981;
+            --dark: #0f172a;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --light-gray: #e2e8f0;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --border-color: rgba(0, 0, 0, 0.08);
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --transition: all 0.3s ease;
+            --transition-smooth: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #f9fafb;
+            color: var(--dark);
+            overflow-x: hidden;
+            font-family: 'Inter', sans-serif;
+            position: relative;
+            line-height: 1.6;
+        }
+
+        /* Smooth scroll behavior */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Minimal Background */
+        .background-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            overflow: hidden;
+            background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+        }
+
+        /* Product Hero Section */
+        .product-hero {
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            padding: 6rem 5% 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            text-align: center;
+        }
+
+        .product-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(99, 102, 241, 0.08);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--primary);
+            margin-bottom: 2rem;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            transition: var(--transition-smooth);
+        }
+
+        .product-badge:hover {
+            background: rgba(99, 102, 241, 0.12);
+        }
+
+        .product-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+            font-family: 'Space Grotesk', sans-serif;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+        }
+
+        .product-subtitle {
+            font-size: clamp(1rem, 2vw, 1.5rem);
+            color: var(--gray);
+            margin-bottom: 3rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.7;
+            font-weight: 400;
+        }
+
+        .product-features {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 0.625rem;
+            color: var(--dark);
+            font-size: 0.95rem;
+            font-weight: 500;
+            padding: 0.875rem 1.5rem;
+            background: white;
+            border-radius: 50px;
+            border: 1px solid var(--light-gray);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+            transition: var(--transition-smooth);
+        }
+
+        .feature-item:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border-color: rgba(16, 185, 129, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .feature-item i {
+            color: white;
+            font-size: 0.7rem;
+            background: var(--secondary);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        /* Improved Auth Section */
+        .auth-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 700px;
+            margin: 0 auto 3rem;
+            width: 100%;
+        }
+
+        .auth-card {
+            background: var(--card-bg);
+            padding: 2.5rem 2rem;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            transition: var(--transition-smooth);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .auth-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+        .auth-card-header {
+            margin-bottom: 1.5rem;
+            width: 100%;
+        }
+
+        .auth-card h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--dark);
+        }
+
+        .auth-card p {
+            color: var(--gray);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .auth-card-action {
+            width: 100%;
+            margin-top: auto;
+        }
+
+        /* Simplified Minimal Button Styles */
+        .btn {
+            padding: 0.875rem 1.75rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            font-family: 'Inter', sans-serif;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            width: 100%;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            letter-spacing: -0.01em;
+        }
+
+        .btn i {
+            font-size: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--dark);
+            border: 1.5px solid var(--light-gray);
+            box-shadow: none;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+        }
+
+        .btn-primary:hover i {
+            transform: translateX(2px);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(0, 0, 0, 0.03);
+            border-color: var(--gray);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        /* Button Loader */
+        .btn-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: opacity 0.2s ease;
+        }
+
+        .btn.loading .btn-content {
+            opacity: 0;
+        }
+
+        .btn-loader {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            pointer-events: none;
+        }
+
+        .btn.loading .btn-loader {
+            opacity: 1;
+        }
+
+        .spinner {
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+
+        .btn-secondary .spinner {
+            border-color: rgba(0, 0, 0, 0.15);
+            border-top-color: var(--dark);
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .btn.loading {
+            pointer-events: none;
+            cursor: not-allowed;
+        }
+
+        .security-notice {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(16, 185, 129, 0.08);
+            border-radius: 12px;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            transition: var(--transition);
+        }
+
+        .security-notice:hover {
+            background: rgba(16, 185, 129, 0.12);
+        }
+
+        .security-notice p {
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            line-height: 1.5;
+            flex-wrap: wrap;
+        }
+
+        .security-notice i {
+            color: var(--secondary);
+            flex-shrink: 0;
+        }
+
+        /* How It Works Section */
+        .how-it-works {
+            padding: 4rem 5%;
+            background: transparent;
+        }
+
+        .section-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title-container {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: clamp(1.8rem, 3vw, 2.5rem);
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2.5rem;
+        }
+
+        .step-card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            text-align: left;
+            transition: var(--transition-smooth);
+            position: relative;
+        }
+
+        .step-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+        /* Large background number like about page */
+        .step-number {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 5rem;
+            font-weight: 700;
+            color: var(--primary);
+            opacity: 0.05;
+            line-height: 1;
+        }
+
+        .step-card h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--dark);
+            font-family: 'Space Grotesk', sans-serif;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-card p {
+            color: var(--gray);
+            line-height: 1.7;
+            font-size: 0.95rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* What You Can Store Section - Enhanced */
+        .storage-types-section {
+            padding: 3rem 5%;
+            background: rgba(99, 102, 241, 0.02);
+        }
+
+        .storage-types-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .storage-types-title {
+            font-size: clamp(1.5rem, 2.5vw, 2rem);
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 2.5rem;
+        }
+
+        .file-types-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .file-type-badge {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            padding: 1.5rem 1rem;
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition-smooth);
+            min-height: 120px;
+        }
+
+        .file-type-badge:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+            border-color: rgba(99, 102, 241, 0.3);
+            background: rgba(99, 102, 241, 0.03);
+        }
+
+        .file-type-icon {
+            font-size: 2rem;
+            color: var(--primary);
+            transition: var(--transition);
+        }
+
+        .file-type-badge:hover .file-type-icon {
+            color: var(--primary-dark);
+        }
+
+        .file-type-name {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        .file-type-ext {
+            font-size: 0.75rem;
+            color: var(--gray);
+            font-weight: 400;
+        }
+
+        /* Redesigned Minimal Why Choose Section */
+        .stats-section {
+            padding: 4rem 5%;
+            background: transparent;
+        }
+
+        .stats-wrapper {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .stats-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .stats-header h2 {
+            font-size: clamp(1.8rem, 3vw, 2.5rem);
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+
+        .stats-header p {
+            font-size: 1.1rem;
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            padding: 2rem;
+            transition: var(--transition-smooth);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+        .stat-card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .stat-icon-wrapper {
+            width: 48px;
+            height: 48px;
+            background: rgba(99, 102, 241, 0.08);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover .stat-icon-wrapper {
+            background: var(--primary);
+        }
+
+        .stat-icon {
+            font-size: 1.5rem;
+            color: var(--primary);
+            transition: var(--transition);
+        }
+
+        .stat-card:hover .stat-icon {
+            color: white;
+        }
+
+        .stat-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--dark);
+            font-family: 'Space Grotesk', sans-serif;
+            line-height: 1.3;
+        }
+
+        .stat-description {
+            color: var(--gray);
+            font-size: 0.95rem;
+            line-height: 1.7;
+            margin: 0;
+        }
+
+        .stat-highlight {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.875rem;
+            background: rgba(16, 185, 129, 0.08);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--secondary);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            margin-top: 0.5rem;
+            width: fit-content;
+            transition: var(--transition);
+        }
+
+        .stat-highlight:hover {
+            background: rgba(16, 185, 129, 0.12);
+        }
+
+        .stat-highlight i {
+            font-size: 0.85rem;
+        }
+
+        /* FAQ Section - IMPROVED FOR SMOOTH ANIMATION */
+        .faq-section {
+            padding: 4rem 5%;
+            background: rgba(99, 102, 241, 0.02);
+        }
+
+        .faq-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .faq-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .faq-header h2 {
+            font-size: clamp(1.8rem, 3vw, 2.5rem);
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+
+        .faq-header p {
+            font-size: 1.1rem;
+            color: var(--gray);
+            line-height: 1.7;
+        }
+
+        .faq-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .faq-item {
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            transition: var(--transition-smooth);
+        }
+
+        .faq-item:hover {
+            box-shadow: var(--shadow);
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+        .faq-item.active {
+            border-color: rgba(99, 102, 241, 0.4);
+            box-shadow: var(--shadow-md);
+        }
+
+        .faq-question {
+            width: 100%;
+            padding: 1.5rem;
+            background: transparent;
+            border: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+            text-align: left;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--dark);
+            transition: var(--transition);
+        }
+
+        .faq-question:hover {
+            color: var(--primary);
+        }
+
+        .faq-question i {
+            color: var(--primary);
+            font-size: 0.9rem;
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+        }
+
+        /* SMOOTH FAQ ANSWER ANIMATION */
+        .faq-answer {
+            display: grid;
+            grid-template-rows: 0fr;
+            transition: grid-template-rows 0.3s ease;
+        }
+
+        .faq-item.active .faq-answer {
+            grid-template-rows: 1fr;
+        }
+
+        .faq-answer-inner {
+            overflow: hidden;
+        }
+
+        .faq-answer p {
+            color: var(--gray);
+            line-height: 1.8;
+            font-size: 0.95rem;
+            margin: 0;
+            padding: 0 1.5rem 1.5rem;
+        }
+
+        /* Compact Creator Section */
+        .creator-section {
+            padding: 4rem 5%;
+            background: rgba(248, 250, 252, 0.5);
+        }
+
+        .creator-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .creator-content {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 2rem;
+            align-items: center;
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            transition: var(--transition-smooth);
+        }
+
+        .creator-content:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        @media (max-width: 768px) {
+            .creator-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+        }
+
+        .creator-image {
+            position: relative;
+        }
+
+        .creator-profile {
+            width: 100%;
+            max-width: 200px;
+            height: auto;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: var(--shadow-md);
+            border: 3px solid white;
+            transition: var(--transition-smooth);
+        }
+
+        .creator-profile:hover {
+            transform: scale(1.03);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .creator-info {
+            text-align: left;
+        }
+
+        @media (max-width: 768px) {
+            .creator-info {
+                text-align: center;
+            }
+        }
+
+        .creator-badge {
+            display: inline-block;
+            padding: 0.4rem 0.875rem;
+            background: rgba(99, 102, 241, 0.08);
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .creator-info h2 {
+            font-size: 1.75rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .highlight-text {
+            color: var(--primary);
+        }
+
+        .creator-role {
+            font-size: 1rem;
+            color: var(--primary);
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        .creator-description {
+            color: var(--gray);
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        .creator-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .creator-skills {
+                justify-content: center;
+            }
+        }
+
+        .skill-tag {
+            padding: 0.4rem 0.875rem;
+            background: rgba(99, 102, 241, 0.08);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--primary);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            transition: var(--transition-smooth);
+        }
+
+        .skill-tag:hover {
+            background: rgba(99, 102, 241, 0.12);
+        }
+
+        .creator-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        @media (max-width: 768px) {
+            .creator-actions {
+                justify-content: center;
+            }
+        }
+
+        .creator-actions .btn {
+            flex: 1;
+            min-width: 140px;
+            max-width: 200px;
+        }
+
+        @media (max-width: 576px) {
+            .creator-actions .btn {
+                width: 100%;
+                max-width: 100%;
+            }
+        }
+
+        /* Call to Action */
+        .cta-section {
+            padding: 4rem 5%;
+            text-align: center;
+            background: rgba(99, 102, 241, 0.03);
+        }
+
+        .cta-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .cta-title {
+            font-size: clamp(1.8rem, 3vw, 2.5rem);
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 1rem;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .cta-subtitle {
+            font-size: 1.1rem;
+            color: var(--gray);
+            margin-bottom: 2rem;
+            line-height: 1.7;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .product-hero {
+                padding: 6rem 5% 3rem;
+                min-height: auto;
+            }
+
+            .auth-section {
+                grid-template-columns: 1fr;
+            }
+
+            .step-card {
+                padding: 1.75rem;
+            }
+
+            .step-number {
+                font-size: 4rem;
+                top: 1.5rem;
+                right: 1.5rem;
+            }
+
+            .auth-card {
+                padding: 2rem;
+            }
+
+            .file-types-grid {
+                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+                gap: 0.75rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-card {
+                padding: 1.75rem;
+            }
+
+            .creator-profile {
+                max-width: 150px;
+                margin: 0 auto;
+            }
+
+            .faq-question {
+                padding: 1.25rem;
+                font-size: 1rem;
+            }
+
+            .faq-answer p {
+                padding: 0 1.25rem 1.25rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .product-title {
+                font-size: 2rem;
+            }
+
+            .product-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .product-features {
+                gap: 0.75rem;
+            }
+
+            .feature-item {
+                font-size: 0.875rem;
+                padding: 0.75rem 1.25rem;
+            }
+
+            .feature-item i {
+                width: 18px;
+                height: 18px;
+                font-size: 0.65rem;
+            }
+
+            .auth-card {
+                padding: 1.75rem;
+            }
+
+            .step-card {
+                padding: 1.5rem;
+            }
+
+            .step-number {
+                font-size: 4rem;
+                top: 1.5rem;
+                right: 1.5rem;
+            }
+
+            .storage-types-title {
+                font-size: 1.4rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .file-types-grid {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            }
+
+            .file-type-badge {
+                padding: 1.25rem 0.75rem;
+                min-height: 100px;
+            }
+
+            .file-type-icon {
+                font-size: 1.75rem;
+            }
+
+            .stat-card {
+                padding: 1.5rem;
+            }
+
+            .stat-icon-wrapper {
+                width: 44px;
+                height: 44px;
+            }
+
+            .stat-icon {
+                font-size: 1.3rem;
+            }
+
+            .stat-title {
+                font-size: 1.1rem;
+            }
+
+            .stat-description {
+                font-size: 0.9rem;
+            }
+
+            .btn {
+                padding: 0.75rem 1.5rem;
+                font-size: 0.9rem;
+            }
+
+            .stats-header h2 {
+                font-size: 1.6rem;
+            }
+
+            .stats-header p {
+                font-size: 1rem;
+            }
+
+            .creator-content {
+                padding: 1.5rem;
+            }
+
+            .creator-info h2 {
+                font-size: 1.5rem;
+            }
+
+            .faq-header h2 {
+                font-size: 1.6rem;
+            }
+
+            .faq-header p {
+                font-size: 1rem;
+            }
+
+            .faq-question {
+                padding: 1.15rem;
+                font-size: 0.95rem;
+            }
+
+            .faq-answer p {
+                padding: 0 1.15rem 1.15rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .product-features {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .feature-item {
+                width: 100%;
+                max-width: 280px;
+            }
+
+            .file-types-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-card-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 0.75rem;
+            }
+
+            .stat-title {
+                font-size: 1rem;
+            }
+        }
+
+        /* Accessibility improvements */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Focus visible for keyboard navigation */
+        .btn:focus-visible,
+        a:focus-visible,
+        .faq-question:focus-visible {
+            outline: 3px solid var(--primary);
+            outline-offset: 3px;
+        }
+
+        /* Prevent text selection on buttons */
+        .btn,
+        .faq-question {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        /* Fade-in animation for scroll reveal */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.5s ease, 
+                        transform 0.5s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="background-wrapper"></div>
+
+    <!-- Include Navbar -->
+    <%- include('navbar') %> 
+
+    <!-- Product Hero Section -->
+    <section class="product-hero">
+        <div class="product-container">
+            <div class="product-badge">
+                <i class="fas fa-lock"></i>
+                Your Private Digital Space
+            </div>
+            <h1 class="product-title">UniSpace</h1>
+            <p class="product-subtitle">
+                Store notes, PDFs, images, Word documents, Excel spreadsheets, PowerPoints, and more securely in one place.
+            </p>
+
+            <div class="product-features">
+                <div class="feature-item">
+                    <i class="fas fa-check"></i>
+                    <span>Secure & Private</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-check"></i>
+                    <span>Easy Upload</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-check"></i>
+                    <span>24/7 Access</span>
+                </div>
+            </div>
+
+            <div class="auth-section">
+                <div class="auth-card fade-in">
+                    <div class="auth-card-header">
+                        <h3>New to UniSpace ?</h3>
+                        <p>Create your secure personal Space in seconds</p>
+                    </div>
+                    <div class="auth-card-action">
+                        <a href="/register" class="btn btn-primary auth-btn">
+                            <span class="btn-content">
+                                <span>Create Your Space</span>
+                                <i class="fas fa-arrow-right"></i>
+                            </span>
+                            <span class="btn-loader">
+                                <div class="spinner"></div>
+                            </span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="auth-card fade-in">
+                    <div class="auth-card-header">
+                        <h3>Already have a space ?</h3>
+                        <p>Sign in to access your files and documents</p>
+                    </div>
+                    <div class="auth-card-action">
+                        <!-- Changed from <a> to <button> with id -->
+                        <button class="btn btn-secondary" id="openLoginPanel">
+                            <span class="btn-content">
+                                <i class="fas fa-sign-in-alt"></i>
+                                <span>Sign In</span>
+                            </span>
+                            <span class="btn-loader">
+                                <div class="spinner"></div>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="security-notice">
+                <p>
+                    <i class="fas fa-check-circle"></i>
+                    <strong>100% Private:</strong> Your data is secured with authentication-based access. Files are never publicly accessible.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works">
+        <div class="section-container">
+            <div class="section-title-container">
+                <h2 class="section-title">How It Works</h2>
+                <p class="section-subtitle">Get started with your personal Space in three simple steps</p>
+            </div>
+
+            <div class="steps-grid">
+                <div class="step-card fade-in">
+                    <div class="step-number">01</div>
+                    <h3>Create Your Space</h3>
+                    <p>Sign up with your email and create a secure account. It takes less than a minute.</p>
+                </div>
+
+                <div class="step-card fade-in">
+                    <div class="step-number">02</div>
+                    <h3>Upload Your Files</h3>
+                    <p>Drag and drop PDFs, images, documents, spreadsheets, presentations, and notes. Organize them as you like.</p>
+                </div>
+
+                <div class="step-card fade-in">
+                    <div class="step-number">03</div>
+                    <h3>Access Securely Anytime</h3>
+                    <p>Log in from any device to view, download, or manage your files. Your data stays private.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- What You Can Store Section - Enhanced -->
+    <section class="storage-types-section">
+        <div class="storage-types-container">
+            <h2 class="storage-types-title">What You Can Store</h2>
+            
+            <div class="file-types-grid">
+                <div class="file-type-badge fade-in">
+                    <i class="fas fa-file-pdf file-type-icon"></i>
+                    <div class="file-type-name">PDFs</div>
+                    <div class="file-type-ext">.pdf</div>
+                </div>
+                
+                <div class="file-type-badge fade-in">
+                    <i class="fas fa-file-word file-type-icon"></i>
+                    <div class="file-type-name">Word Docs</div>
+                    <div class="file-type-ext">.doc, .docx</div>
+                </div>
+                
+                <div class="file-type-badge fade-in">
+                    <i class="fas fa-file-excel file-type-icon"></i>
+                    <div class="file-type-name">Excel Files</div>
+                    <div class="file-type-ext">.xls, .xlsx</div>
+                </div>
+                
+                <div class="file-type-badge fade-in">
+                    <i class="fas fa-file-powerpoint file-type-icon"></i>
+                    <div class="file-type-name">PowerPoints</div>
+                    <div class="file-type-ext">.ppt, .pptx</div>
+                </div>
+                
+                <div class="file-type-badge fade-in">
+                    <i class="fas fa-image file-type-icon"></i>
+                    <div class="file-type-name">Images</div>
+                    <div class="file-type-ext">.jpg, .png, .gif</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Redesigned Why Choose UniSpace Section -->
+    <section class="stats-section">
+        <div class="stats-wrapper">
+            <div class="stats-header">
+                <h2>Why Choose UniSpace ?</h2>
+                <p>A secure, simple, and reliable solution for all your digital storage needs</p>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card fade-in">
+                    <div class="stat-card-header">
+                        <div class="stat-icon-wrapper">
+                            <i class="fas fa-bolt stat-icon"></i>
+                        </div>
+                        <h3 class="stat-title">Lightning Fast</h3>
+                    </div>
+                    <p class="stat-description">Experience blazing-fast load times under 2 seconds. Access your files instantly without any delays or waiting.</p>
+                    <div class="stat-highlight">
+                        <i class="fas fa-check-circle"></i>
+                        <span>&lt;2s Load Time</span>
+                    </div>
+                </div>
+                
+                <div class="stat-card fade-in">
+                    <div class="stat-card-header">
+                        <div class="stat-icon-wrapper">
+                            <i class="fas fa-shield-alt stat-icon"></i>
+                        </div>
+                        <h3 class="stat-title">100% Secure</h3>
+                    </div>
+                    <p class="stat-description">Your data is protected with authentication-based security. Only you can access your files, ensuring complete privacy.</p>
+                    <div class="stat-highlight">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Private & Protected</span>
+                    </div>
+                </div>
+                
+                <div class="stat-card fade-in">
+                    <div class="stat-card-header">
+                        <div class="stat-icon-wrapper">
+                            <i class="fas fa-mobile-alt stat-icon"></i>
+                        </div>
+                        <h3 class="stat-title">Access Anywhere</h3>
+                    </div>
+                    <p class="stat-description">Fully responsive design works perfectly on desktop, tablet, and mobile. Your files are available wherever you are.</p>
+                    <div class="stat-highlight">
+                        <i class="fas fa-check-circle"></i>
+                        <span>All Devices</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+        <div class="faq-container">
+            <div class="faq-header">
+                <h2>Frequently Asked Questions</h2>
+                <p>Everything you need to know about UniSpace</p>
+            </div>
+            
+            <div class="faq-list">
+                <div class="faq-item fade-in">
+                    <button class="faq-question" aria-expanded="false">
+                        <span>Is my data really secure on UniSpace?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            <p>Absolutely. Your data is protected with authentication-based security, meaning only you can access your files. We never share your data with third parties, and all files are stored securely with proper access controls.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item fade-in">
+                    <button class="faq-question" aria-expanded="false">
+                        <span>What file types can I upload?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            <p>UniSpace supports a wide variety of file types including PDFs, Word documents (.doc, .docx), Excel spreadsheets (.xls, .xlsx), PowerPoint presentations (.ppt, .pptx), images (.jpg, .png, .gif), and more. You can store all your important documents in one secure place.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item fade-in">
+                    <button class="faq-question" aria-expanded="false">
+                        <span>Can I access my files from different devices?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            <p>Yes! UniSpace is fully responsive and works seamlessly on desktop, tablet, and mobile devices. Simply log in from any device with an internet connection to access your files anytime, anywhere.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Include Footer -->
+    <%- include('footer') %>
+
+    <script>
+        // Navbar scroll effect (if navbar is present)
+        const navbar = document.getElementById('navbar');
+        if (navbar) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+            });
+        }
+
+        // Button loader functionality for auth buttons
+        document.querySelectorAll('.auth-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                // Add loading class
+                this.classList.add('loading');
+            });
+        });
+
+        // SOLUTION 1: Handle Sign In button click to open navbar login panel
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded - setting up sign in button');
+            
+            // Get the Sign In button from the homepage card
+            const signInBtn = document.getElementById('openLoginPanel');
+            
+            if (!signInBtn) {
+                console.error('Sign in button not found!');
+                return;
+            }
+            
+            console.log('Sign in button found:', signInBtn);
+            
+            // Get navbar elements with retry mechanism
+            function getNavbarElements() {
+                return {
+                    spaceBtn: document.getElementById('spaceBtn'),
+                    authPanel: document.getElementById('authPanel'),
+                    menuBtn: document.getElementById('menuBtn'),
+                    mobileModal: document.getElementById('mobileAuthModal')
+                };
+            }
+            
+            signInBtn.addEventListener('click', function(e) {
+                e.preventDefault(); // Prevent any default behavior
+                e.stopPropagation(); // Stop event bubbling
+                
+                console.log('Sign in button clicked');
+                
+                const elements = getNavbarElements();
+                console.log('Navbar elements:', elements);
+                
+                // Check if we're on desktop or mobile
+                if (window.innerWidth > 992) {
+                    // Desktop: Open the auth panel
+                    if (elements.spaceBtn && elements.authPanel) {
+                        console.log('Opening desktop auth panel');
+                        
+                        // Toggle the panel
+                        elements.authPanel.classList.add('show');
+                        elements.spaceBtn.classList.add('active');
+                        
+                        // Clear any previous form errors
+                        const userForm = document.getElementById('userFormDesktop');
+                        const adminForm = document.getElementById('adminFormDesktop');
+                        
+                        if (userForm) {
+                            const errorDiv = userForm.querySelector('.form-error');
+                            if (errorDiv) errorDiv.remove();
+                            
+                            // Focus on email input
+                            setTimeout(() => {
+                                const emailInput = userForm.querySelector('input[type="email"]');
+                                if (emailInput) emailInput.focus();
+                            }, 300);
+                        }
+                        
+                        if (adminForm) {
+                            const errorDiv = adminForm.querySelector('.form-error');
+                            if (errorDiv) errorDiv.remove();
+                        }
+                        
+                        // Smooth scroll to top to see the panel
+                        window.scrollTo({ 
+                            top: 0, 
+                            behavior: 'smooth' 
+                        });
+                    } else {
+                        console.error('Desktop elements not found:', {
+                            spaceBtn: elements.spaceBtn,
+                            authPanel: elements.authPanel
+                        });
+                        
+                        // Fallback: try to find and click the space button
+                        if (elements.spaceBtn) {
+                            console.log('Falling back to clicking space button');
+                            elements.spaceBtn.click();
+                        }
+                    }
+                } else {
+                    // Mobile: Open the mobile auth modal
+                    if (elements.menuBtn && elements.mobileModal) {
+                        console.log('Opening mobile auth modal');
+                        // Trigger the same click event as the hamburger menu
+                        elements.menuBtn.click();
+                    } else {
+                        console.error('Mobile elements not found:', {
+                            menuBtn: elements.menuBtn,
+                            mobileModal: elements.mobileModal
+                        });
+                    }
+                }
+            });
+            
+            // Also try to find space button in case it's dynamically loaded
+            const checkInterval = setInterval(() => {
+                const elements = getNavbarElements();
+                if (elements.spaceBtn && elements.authPanel) {
+                    console.log('Navbar elements found');
+                    clearInterval(checkInterval);
+                }
+            }, 500);
+            
+            // Clear interval after 5 seconds to avoid infinite checking
+            setTimeout(() => clearInterval(checkInterval), 5000);
+        });
+
+        // FAQ Accordion Functionality with Smooth Animation
+        document.querySelectorAll('.faq-question').forEach(button => {
+            button.addEventListener('click', () => {
+                const faqItem = button.parentElement;
+                const isActive = faqItem.classList.contains('active');
+                
+                // Close all FAQ items smoothly
+                document.querySelectorAll('.faq-item').forEach(item => {
+                    item.classList.remove('active');
+                    item.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+                });
+                
+                // Open clicked item if it wasn't active
+                if (!isActive) {
+                    faqItem.classList.add('active');
+                    button.setAttribute('aria-expanded', 'true');
+                }
+            });
+        });
+
+        // Smooth scroll reveal animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all fade-in elements
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Add staggered animation delay to cards in same section
+        document.querySelectorAll('.steps-grid .step-card').forEach((card, index) => {
+            card.style.transitionDelay = `${index * 0.1}s`;
+        });
+
+        document.querySelectorAll('.file-types-grid .file-type-badge').forEach((badge, index) => {
+            badge.style.transitionDelay = `${index * 0.05}s`;
+        });
+
+        document.querySelectorAll('.stats-grid .stat-card').forEach((card, index) => {
+            card.style.transitionDelay = `${index * 0.1}s`;
+        });
+
+        document.querySelectorAll('.faq-list .faq-item').forEach((item, index) => {
+            item.style.transitionDelay = `${index * 0.08}s`;
+        });
+    </script>
+</body>
+</html>
