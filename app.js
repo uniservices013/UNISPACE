@@ -752,8 +752,8 @@ const requireAdminAuth = (req, res, next) => {
 // =====================================
 
 app.get('/', (req, res) => res.render('Home', { title: 'Home' }));
-app.get('/privacy', (req, res) => res.render('Privacy', { title: 'Privacy Policy' }));
-app.get('/terms', (req, res) => res.render('Terms', { title: 'Terms & Conditions' }));
+app.get('/privacy', (req, res) => res.render('privacy', { title: 'Privacy Policy' }));
+app.get('/terms', (req, res) => res.render('terms', { title: 'Terms & Conditions' }));
 app.get('/contact', (req, res) => res.render('Contact', { title: 'Contact Us' }));
 app.get('/register', (req, res) => res.render('Register', { title: 'Register' }));
 app.get('/login', (req, res) => res.render('login', { title: 'Login' }));
